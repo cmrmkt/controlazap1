@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instanciate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "13.0.4"
   }
   public: {
     Tables: {
@@ -395,42 +395,9 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      check_n8n_health: {
-        Args: Record<PropertyKey, never>
-        Returns: Json
-      }
-      find_user_by_whatsapp: {
-        Args: { phone_input: string }
-        Returns: string
-      }
-      has_active_subscription: {
-        Args: { user_id_param: string }
-        Returns: boolean
-      }
-      is_user_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      normalize_phone_number: {
-        Args: { phone_input: string }
-        Returns: string
-      }
-      sync_missing_profiles: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
       user_owns_category: {
         Args: { category_uuid: string }
         Returns: boolean
-      }
-      validate_user_data_integrity: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          table_name: string
-          issue_type: string
-          count: number
-          description: string
-        }[]
       }
     }
     Enums: {
