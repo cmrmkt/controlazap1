@@ -16,8 +16,9 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [resendLoading, setResendLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const { signIn } = useAuth()
+  const { signIn, resendConfirmation } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -44,17 +45,17 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
         
         // Improved error handling
         let errorMessage = 'Erro desconhecido'
-        if (error.message.includes('Invalid login credentials') || 
-            error.message.includes('invalid_credentials')) {
+        const msg = String(error.message || '').toLowerCase()
+        if (msg.includes('invalid login credentials') || msg.includes('invalid_credentials')) {
           errorMessage = 'Email ou senha incorretos'
-        } else if (error.message.includes('too_many_requests')) {
+        } else if (msg.includes('too_many_requests')) {
           errorMessage = 'Muitas tentativas. Tente novamente em alguns minutos'
-        } else if (error.message.includes('email_not_confirmed')) {
+        } else if (msg.includes('email_not_confirmed') || msg.includes('email not confirmed')) {
           errorMessage = 'Confirme seu email antes de fazer login'
-        } else if (error.message.includes('signup_disabled')) {
+        } else if (msg.includes('signup_disabled')) {
           errorMessage = 'Cadastros temporariamente desabilitados'
         } else {
-          errorMessage = error.message
+          errorMessage = String(error.message || 'Erro desconhecido')
         }
         
         toast({
@@ -84,6 +85,40 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
 
   const handleSubscribeClick = () => {
     window.open('https://www.asaas.com/c/zyevzm4ajw9p3yz2', '_blank')
+  }
+
+  const handleResendConfirmation = async () => {
+    if (!email.trim()) {
+      toast({
+        title: 'Informe seu email',
+        description: 'Digite seu email para reenviar a confirmação.',
+        variant: 'destructive',
+      })
+      return
+    }
+    setResendLoading(true)
+    try {
+      const { error } = await resendConfirmation(email.trim())
+      if (error) {
+        toast({
+          title: 'Falha ao reenviar',
+          description: error.message ?? 'Tente novamente mais tarde.',
+          variant: 'destructive',
+        })
+      } else {
+        toast({
+          title: 'Email enviado',
+          description: 'Verifique sua caixa de entrada para confirmar seu cadastro.',
+        })
+      }
+    } catch (err: any) {
+      toast({
+        title: 'Erro inesperado',
+        description: 'Não foi possível reenviar o email de confirmação.',
+        variant: 'destructive',
+      })
+    }
+    setResendLoading(false)
   }
 
   return (
@@ -171,6 +206,14 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
             className="text-sm text-muted-foreground hover:text-primary"
           >
             Esqueceu sua senha?
+          </Button>
+          <Button
+            variant="link"
+            onClick={handleResendConfirmation}
+            disabled={resendLoading}
+            className="text-sm text-muted-foreground hover:text-primary"
+          >
+            {resendLoading ? 'Reenviando...' : 'Não recebeu o email de confirmação? Reenviar'}
           </Button>
         </div>
       </div>

@@ -12,6 +12,7 @@ interface AuthContextType {
   signOut: () => Promise<void>
   resetPassword: (email: string) => Promise<{ error: any }>
   changePassword: (newPassword: string) => Promise<{ error: any }>
+  resendConfirmation: (email: string) => Promise<{ error: any }>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -230,6 +231,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const resendConfirmation = async (email: string) => {
+    try {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return { error: { message: 'Formato de email inválido' } };
+      }
+      const redirectUrl = `${window.location.origin}/perfil`;
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email.toLowerCase().trim(),
+        options: { emailRedirectTo: redirectUrl }
+      });
+      return { error };
+    } catch (error: any) {
+      return { error: { message: 'Erro interno do servidor' } };
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -241,6 +260,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signOut,
         resetPassword,
         changePassword,
+        resendConfirmation,
       }}
     >
       {children}
