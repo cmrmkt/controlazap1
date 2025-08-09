@@ -83,7 +83,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
   }
 
   const handleSubscribeClick = () => {
-    window.open('https://poupeizap.com', '_blank')
+    window.open('https://www.asaas.com/c/zyevzm4ajw9p3yz2', '_blank')
   }
 
   return (
@@ -161,7 +161,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
           variant="outline"
           className="w-full h-10 sm:h-11 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
         >
-          Adquira já
+          Assine Agora
         </Button>
         
         <div className="mt-4 sm:mt-6 text-center">

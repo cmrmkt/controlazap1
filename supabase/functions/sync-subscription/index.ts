@@ -287,11 +287,14 @@ serve(async (req) => {
 
     // Para outros tipos - tentar buscar dados da API externa
     try {
-      const response = await fetch('https://n8n.poupeizap.com/webhook-test/assinatura/info', {
+      const username = Deno.env.get('CONTROLZAP_BASIC_USERNAME') ?? '';
+      const password = Deno.env.get('CONTROLZAP_BASIC_PASSWORD') ?? '';
+
+      const response = await fetch('https://webhook.controlazap.site/webhook/assinatura/info', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Basic ' + btoa('USUARIO:SENHA')
+          'Authorization': 'Basic ' + btoa(`${username}:${password}`)
         },
         body: JSON.stringify({
           subscription: subscriptionId

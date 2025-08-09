@@ -81,8 +81,8 @@ export function useN8NMonitoring() {
       try {
         console.log('[N8N-MONITOR] Checking health status...');
         
-        const { data: healthData, error } = await supabase
-          .rpc('check_n8n_health');
+        const { data: healthData, error } = await (supabase.rpc as any)
+          ('check_n8n_health');
         
         if (error) {
           console.error('[N8N-MONITOR] Health check failed:', error);
@@ -173,8 +173,8 @@ export function useN8NMonitoring() {
     try {
       console.log('[N8N-MONITOR] Manual health check requested...');
       
-      const { data: healthData, error } = await supabase
-        .rpc('check_n8n_health');
+      const { data: healthData, error } = await (supabase.rpc as any)
+        ('check_n8n_health');
       
       if (error) {
         toast({

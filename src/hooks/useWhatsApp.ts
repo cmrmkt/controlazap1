@@ -26,24 +26,22 @@ export function useWhatsApp(): WhatsAppHookReturn {
         return false;
       }
 
-      // Call the external API with Basic Auth
-      const response = await fetch('https://webhook.poupeizap.com/webhook/verifica-zap', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Basic ' + btoa('USUARIO:SENHA')
-        },
-        body: JSON.stringify({
-          phone: phone,
+      // Call Supabase Edge Function to securely send verification code
+      const { data, error } = await supabase.functions.invoke('verify-whatsapp', {
+        body: {
+          phone,
           userId: user.id
-        })
+        }
       });
 
-      if (!response.ok) {
-        throw new Error(`API returned ${response.status}: ${response.statusText}`);
+      if (error) {
+        toast({
+          title: "Erro",
+          description: error.message || "Erro ao enviar código de verificação",
+          variant: "destructive",
+        });
+        return false;
       }
-
-      const data = await response.json();
 
       if (data?.error) {
         toast({
@@ -58,8 +56,6 @@ export function useWhatsApp(): WhatsAppHookReturn {
         title: "Sucesso",
         description: "Código de verificação enviado via WhatsApp",
       });
-      
-      return true;
     } catch (error: any) {
       console.error('Error in sendVerificationCode:', error);
       toast({
@@ -88,25 +84,23 @@ export function useWhatsApp(): WhatsAppHookReturn {
         return false;
       }
 
-      // Call the external API with Basic Auth for verification
-      const response = await fetch('https://webhook.poupeizap.com/webhook/verifica-zap', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Basic ' + btoa('USUARIO:SENHA')
-        },
-        body: JSON.stringify({
-          phone: phone,
-          code: code,
+      // Call Supabase Edge Function to securely verify code
+      const { data, error } = await supabase.functions.invoke('verify-whatsapp', {
+        body: {
+          phone,
+          code,
           userId: user.id
-        })
+        }
       });
 
-      if (!response.ok) {
-        throw new Error(`API returned ${response.status}: ${response.statusText}`);
+      if (error) {
+        toast({
+          title: "Erro",
+          description: error.message || "Erro ao verificar código",
+          variant: "destructive",
+        });
+        return false;
       }
-
-      const data = await response.json();
 
       if (data?.success) {
         toast({

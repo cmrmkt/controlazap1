@@ -19,7 +19,8 @@ const handler = async (req: Request): Promise<Response> => {
 
   const supabaseClient = createClient(
     Deno.env.get('SUPABASE_URL') ?? '',
-    Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    { auth: { persistSession: false } }
   );
 
   try {
@@ -61,10 +62,10 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Configure WhatsApp validation endpoint
-    const n8nApiUrl = 'https://webhook.poupeizap.com/webhook/verifica-zap';
-    const n8nApiUser = 'USUARIO';
-    const n8nApiPassword = 'SENHA';
+    // Configure WhatsApp validation endpoint and credentials via secrets
+    const n8nApiUrl = 'https://webhook.controlazap.site/webhook/verifica-zap';
+    const n8nApiUser = Deno.env.get('CONTROLZAP_BASIC_USERNAME') ?? '';
+    const n8nApiPassword = Deno.env.get('CONTROLZAP_BASIC_PASSWORD') ?? '';
 
     let isWhatsAppValid = false;
 
