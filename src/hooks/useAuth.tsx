@@ -99,13 +99,58 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { error: { message: 'Senha deve ter pelo menos 8 caracteres' } };
       }
 
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email: email.toLowerCase().trim(),
         password,
       });
       
+      // Attempt automatic confirmation if email is not confirmed
+      if (signInError) {
+        const msg = String(signInError.message || '').toLowerCase();
+        if (msg.includes('email') && msg.includes('confirm')) {
+          try {
+            await supabase.functions.invoke('confirm-user', {
+              body: { email: email.toLowerCase().trim() },
+            });
+            // Retry sign-in after attempting confirmation
+            const { error: retryError } = await supabase.auth.signInWithPassword({
+              email: email.toLowerCase().trim(),
+              password,
+            });
+            if (!retryError) {
+              // Background subscription sync after successful login
+              setTimeout(async () => {
+                try {
+                  const { data: { session } } = await supabase.auth.getSession();
+                  if (session?.access_token) {
+                    console.log('[Auth] Starting subscription sync after login');
+                    const syncResponse = await supabase.functions.invoke('sync-subscription', {
+                      headers: {
+                        'Authorization': `Bearer ${session.access_token}`
+                      }
+                    });
+                    if (syncResponse.error) {
+                      console.error('[Auth] Subscription sync error:', syncResponse.error);
+                    } else {
+                      console.log('[Auth] Subscription sync completed successfully:', syncResponse.data);
+                    }
+                  }
+                } catch (syncError: any) {
+                  console.log('[Auth] Subscription sync failed:', syncError.message);
+                }
+              }, 1000);
+            }
+            return { error: retryError };
+          } catch (confirmErr) {
+            // If confirmation fails, return original error
+            return { error: signInError };
+          }
+        }
+        return { error: signInError };
+      }
+      
       // Se login foi bem-sucedido, tentar sincronizar assinatura em background
-      if (!error) {
+      if (!signInError) {
         setTimeout(async () => {
           try {
             const { data: { session } } = await supabase.auth.getSession();
@@ -129,7 +174,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }, 1000);
       }
       
-      return { error };
+      return { error: signInError };
     } catch (error: any) {
       return { error: { message: 'Erro interno do servidor' } };
     }
