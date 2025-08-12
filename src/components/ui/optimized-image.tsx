@@ -121,7 +121,7 @@ export const OptimizedImage = React.forwardRef<HTMLImageElement, OptimizedImageP
         {isError && (
           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 text-primary text-sm font-medium">
             <div className="text-center">
-              <div className="text-lg font-bold mb-2">PoupeiZap</div>
+              <div className="text-lg font-bold mb-2">ControlaZap</div>
               <div className="text-xs opacity-70">Imagem em carregamento...</div>
             </div>
           </div>

@@ -24,10 +24,10 @@ export function AppLayout({ children }: AppLayoutProps) {
               <SidebarTrigger />
               <div className="flex items-center gap-3">
                 <h1 className="text-lg font-semibold title-color hidden sm:block">
-                  Gestão PoupeiZap
+                  Gestão ControlaZap
                 </h1>
                 <h1 className="text-base font-semibold title-color sm:hidden">
-                  PoupeiZap
+                  ControlaZap
                 </h1>
               </div>
             </div>

@@ -125,7 +125,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
     <div className="w-full mx-auto">
       <div className="text-start py-4 sm:py-6 lg:py-8">
         <h1 className="text-base sm:text-lg font-bold text-white mb-2">
-          Bem-vindo ao PoupeiZap
+          Bem-vindo ao ControlaZap
         </h1>
         <p className="text-sm sm:text-base text-white/80">
           Entre na sua conta para continuar

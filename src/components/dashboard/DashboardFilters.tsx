@@ -20,7 +20,7 @@ export function DashboardFilters({
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Sistema de Gestão Financeira PoupeiZap</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Sistema de Gestão Financeira ControlaZap</h2>
         <p className="text-muted-foreground">
           Visão geral das suas finanças pessoais
           {transactionCount > 0 && ` • ${transactionCount} transações encontradas`}

@@ -154,7 +154,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send WhatsApp message
     const whatsappPayload = {
       phone: cleanPhone,
-      message: `Seu código de verificação Poupaê é: ${verificationCode}. Este código expira em 5 minutos.`
+      message: `Seu código de verificação ControlaZap é: ${verificationCode}. Este código expira em 5 minutos.`
     };
 
     const whatsappResponse = await fetch(whatsappApiUrl, {

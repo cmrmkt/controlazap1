@@ -38,7 +38,7 @@ export default function Plano() {
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden rounded-3xl">
         <OptimizedImage 
           src="/lovable-uploads/a9a4f667-c2c7-4068-9052-4dd662fc919c.png?v=3" 
-          alt="PoupeiZap"
+          alt="ControlaZap"
           className="w-full h-full object-cover"
           webp={false}
           lazy={false}
