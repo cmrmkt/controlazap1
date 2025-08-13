@@ -1,12 +1,26 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LoginForm } from '@/components/auth/LoginForm';
 import { ForgotPasswordForm } from '@/components/auth/ForgotPasswordForm';
+import { NewPasswordForm } from '@/components/auth/NewPasswordForm';
 
-type AuthMode = 'login' | 'forgot';
+type AuthMode = 'login' | 'forgot' | 'reset';
 
 export default function Auth() {
   const [mode, setMode] = useState<AuthMode>('login');
+
+  useEffect(() => {
+    try {
+      const hasRecoverySearch = new URLSearchParams(window.location.search).get('type') === 'recovery'
+      const hasRecoveryHash = typeof window !== 'undefined' && window.location.hash.includes('type=recovery')
+      if (hasRecoverySearch || hasRecoveryHash) {
+        setMode('reset')
+      }
+    } catch (e) {
+      // noop
+    }
+  }, [])
+
 
   return (
     <div className="min-h-screen relative overflow-hidden futuristic-bg">
@@ -31,6 +45,9 @@ export default function Auth() {
           )}
           {mode === 'forgot' && (
             <ForgotPasswordForm onBack={() => setMode('login')} />
+          )}
+          {mode === 'reset' && (
+            <NewPasswordForm onBack={() => setMode('login')} />
           )}
         </div>
       </div>
