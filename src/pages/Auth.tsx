@@ -11,13 +11,21 @@ export default function Auth() {
 
   useEffect(() => {
     try {
-      const hasRecoverySearch = new URLSearchParams(window.location.search).get('type') === 'recovery'
-      const hasRecoveryHash = typeof window !== 'undefined' && window.location.hash.includes('type=recovery')
-      if (hasRecoverySearch || hasRecoveryHash) {
-        setMode('reset')
+      const searchParams = new URLSearchParams(window.location.search);
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      
+      const hasRecoverySearch = searchParams.get('type') === 'recovery';
+      const hasRecoveryHash = hashParams.get('type') === 'recovery';
+      
+      // Also check for access_token and refresh_token which indicate a recovery session
+      const hasAccessToken = hashParams.get('access_token');
+      const hasRefreshToken = hashParams.get('refresh_token');
+      
+      if (hasRecoverySearch || hasRecoveryHash || (hasAccessToken && hasRefreshToken)) {
+        setMode('reset');
       }
     } catch (e) {
-      // noop
+      console.error('Error checking recovery mode:', e);
     }
   }, [])
 

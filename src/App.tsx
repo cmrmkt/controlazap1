@@ -72,9 +72,16 @@ function AppRoutes() {
     );
   }
 
+  // Check if we're in password recovery mode
+  const isPasswordRecovery = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    return urlParams.get('type') === 'recovery' || hashParams.get('type') === 'recovery';
+  };
+
   return (
     <Routes>
-      <Route path="/auth" element={user ? <Navigate to="/dashboard" replace /> : <Auth />} />
+      <Route path="/auth" element={user && !isPasswordRecovery() ? <Navigate to="/dashboard" replace /> : <Auth />} />
       <Route path="/plano" element={<Plano />} />
       <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Navigate to="/auth" replace />} />
       

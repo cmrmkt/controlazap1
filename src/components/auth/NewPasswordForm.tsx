@@ -13,15 +13,33 @@ interface NewPasswordFormProps {
 
 export function NewPasswordForm({ onBack }: NewPasswordFormProps) {
   const navigate = useNavigate()
-  const { changePassword } = useAuth()
+  const { changePassword, session } = useAuth()
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     newPassword: '',
     confirmPassword: '',
   })
 
+  // Check if we have a valid recovery session
+  const hasValidRecoverySession = () => {
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const hasTokens = hashParams.get('access_token') && hashParams.get('refresh_token');
+    return hasTokens || session;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Check if we have a valid recovery session
+    if (!hasValidRecoverySession()) {
+      toast({
+        title: 'Sessão de recuperação inválida',
+        description: 'O link de recuperação expirou ou é inválido. Solicite um novo.',
+        variant: 'destructive',
+      })
+      onBack()
+      return
+    }
 
     // Basic validation
     if (formData.newPassword.length < 8) {
@@ -46,17 +64,31 @@ export function NewPasswordForm({ onBack }: NewPasswordFormProps) {
     try {
       const { error } = await changePassword(formData.newPassword)
       if (error) {
-        toast({
-          title: 'Erro ao definir nova senha',
-          description: error.message ?? 'Tente novamente mais tarde.',
-          variant: 'destructive',
-        })
+        const errorMessage = error.message ?? 'Tente novamente mais tarde.';
+        
+        // Handle specific error cases
+        if (errorMessage.includes('session') || errorMessage.includes('token')) {
+          toast({
+            title: 'Sessão expirada',
+            description: 'O link de recuperação expirou. Solicite um novo link.',
+            variant: 'destructive',
+          })
+          onBack()
+        } else {
+          toast({
+            title: 'Erro ao definir nova senha',
+            description: errorMessage,
+            variant: 'destructive',
+          })
+        }
       } else {
         toast({
           title: 'Senha atualizada!',
           description: 'Sua senha foi redefinida com sucesso. Redirecionando...',
         })
-        // Após a recuperação, o usuário está autenticado. Vá para o dashboard.
+        
+        // Clear URL params and redirect to dashboard
+        window.history.replaceState({}, document.title, '/dashboard');
         navigate('/dashboard')
       }
     } catch (err: any) {
@@ -67,6 +99,30 @@ export function NewPasswordForm({ onBack }: NewPasswordFormProps) {
       })
     }
     setLoading(false)
+  }
+
+  // Show error if no valid recovery session
+  if (!hasValidRecoverySession()) {
+    return (
+      <div className="w-full max-w-md mx-auto">
+        <div className="text-start py-8">
+          <h1 className="text-lg font-bold text-white mb-2">Link inválido</h1>
+          <p className="text-base text-white/80">
+            Este link de recuperação é inválido ou expirou.
+          </p>
+        </div>
+        <div className="text-center">
+          <Button
+            variant="link"
+            onClick={onBack}
+            className="text-sm text-muted-foreground hover:text-primary"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Voltar ao login
+          </Button>
+        </div>
+      </div>
+    )
   }
 
   return (
