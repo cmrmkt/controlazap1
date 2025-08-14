@@ -73,13 +73,16 @@ export default function Plano() {
                       alt={`Usuário ${index + 1}`}
                       className="w-full h-full object-cover"
                       onError={(e) => {
-                        // Fallback para caso a imagem não carregue
+                        // Fallback para caso a imagem não carregue - Fixed XSS vulnerability
                         const target = e.target as HTMLImageElement;
                         target.style.backgroundColor = '#6366f1';
                         target.style.display = 'flex';
                         target.style.alignItems = 'center';
                         target.style.justifyContent = 'center';
-                        target.innerHTML = `<span style="color: white; font-size: 10px; font-weight: bold;">${String.fromCharCode(65 + index)}</span>`;
+                        target.style.color = 'white';
+                        target.style.fontSize = '10px';
+                        target.style.fontWeight = 'bold';
+                        target.textContent = String.fromCharCode(65 + index);
                       }}
                     />
                   </div>
