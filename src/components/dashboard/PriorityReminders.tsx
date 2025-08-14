@@ -114,7 +114,9 @@ export function PriorityReminders() {
               className="p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg border border-orange-200 dark:border-orange-700 hover:shadow-md transition-shadow space-y-3"
             >
               <div className="flex items-start gap-3">
-                <IconComponent className="h-5 w-5 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" />
+                <div className="flex-shrink-0 p-1">
+                  <IconComponent className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                </div>
                 <div className="flex-1 min-w-0">
                   <div className="font-medium text-gray-900 dark:text-gray-100 text-sm leading-tight break-words">
                     {lembrete.descricao}
