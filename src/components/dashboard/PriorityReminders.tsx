@@ -111,62 +111,68 @@ export function PriorityReminders() {
           return (
             <div 
               key={lembrete.id} 
-              className="p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg border border-orange-200 dark:border-orange-700 hover:shadow-md transition-shadow space-y-3"
+              className="p-2 sm:p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg border border-orange-200 dark:border-orange-700 hover:shadow-md transition-shadow overflow-hidden"
             >
-              <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 p-1">
-                  <IconComponent className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+              {/* Header com ícone e descrição */}
+              <div className="flex items-start gap-2 sm:gap-3 mb-3">
+                <div className="flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center rounded bg-orange-100 dark:bg-orange-900/50">
+                  <IconComponent className="h-3 w-3 sm:h-4 sm:w-4 text-orange-600 dark:text-orange-400" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-gray-900 dark:text-gray-100 text-sm leading-tight break-words">
+                  <h4 className="font-medium text-gray-900 dark:text-gray-100 text-xs sm:text-sm leading-tight break-words pr-1">
                     {lembrete.descricao}
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2 mt-2">
-                    <Badge variant="outline" className={`text-xs whitespace-nowrap ${getDateColor(lembrete.data!)}`}>
-                      {getDateLabel(lembrete.data!)}
-                    </Badge>
-                    {lembrete.valor && (
-                      <Badge variant="outline" className="text-xs whitespace-nowrap">
-                        {formatCurrency(lembrete.valor)}
-                      </Badge>
-                    )}
-                  </div>
+                  </h4>
                 </div>
               </div>
               
-              <div className="flex justify-end gap-2">
+              {/* Badges de data e valor */}
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-3">
+                <Badge variant="outline" className={`text-xs whitespace-nowrap ${getDateColor(lembrete.data!)}`}>
+                  {getDateLabel(lembrete.data!)}
+                </Badge>
+                {lembrete.valor && (
+                  <Badge variant="outline" className="text-xs whitespace-nowrap">
+                    {formatCurrency(lembrete.valor)}
+                  </Badge>
+                )}
+              </div>
+              
+              {/* Botões de ação - Mobile first */}
+              <div className="flex flex-col sm:flex-row gap-2 sm:justify-end">
                 <Button
                   size="sm"
                   onClick={() => handleUpdateStatus(lembrete.id, 'paid')}
                   disabled={processingIds.has(lembrete.id)}
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white h-8 px-3 text-xs"
+                  className="bg-emerald-500 hover:bg-emerald-600 text-white h-7 sm:h-8 px-2 sm:px-3 text-xs w-full sm:w-auto"
                   title="Marcar como pago"
                 >
                   <CheckCircle className="h-3 w-3 mr-1" />
                   Pago
                 </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => handleUpdateStatus(lembrete.id, 'pending')}
-                  disabled={processingIds.has(lembrete.id)}
-                  className="border-orange-300 text-orange-800 hover:bg-orange-100 h-8 px-3 text-xs"
-                  title="Manter pendente"
-                >
-                  <Clock className="h-3 w-3 mr-1" />
-                  Pendente
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={() => handleDeleteReminder(lembrete.id)}
-                  disabled={processingIds.has(lembrete.id)}
-                  className="h-8 px-3 text-xs"
-                  title="Excluir lembrete"
-                >
-                  <X className="h-3 w-3 mr-1" />
-                  Excluir
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleUpdateStatus(lembrete.id, 'pending')}
+                    disabled={processingIds.has(lembrete.id)}
+                    className="border-orange-300 text-orange-800 hover:bg-orange-100 dark:hover:bg-orange-900/20 h-7 sm:h-8 px-2 sm:px-3 text-xs flex-1 sm:flex-none"
+                    title="Manter pendente"
+                  >
+                    <Clock className="h-3 w-3 mr-1" />
+                    Pendente
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => handleDeleteReminder(lembrete.id)}
+                    disabled={processingIds.has(lembrete.id)}
+                    className="h-7 sm:h-8 px-2 sm:px-3 text-xs flex-1 sm:flex-none"
+                    title="Excluir lembrete"
+                  >
+                    <X className="h-3 w-3 mr-1" />
+                    Excluir
+                  </Button>
+                </div>
               </div>
             </div>
           );
