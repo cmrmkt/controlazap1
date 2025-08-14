@@ -41,8 +41,8 @@ export function DashboardSidebar({ lembretes }: DashboardSidebarProps) {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+            <Calendar className="h-4 w-4 sm:h-5 sm:w-5" />
             Próximo Lembrete
           </CardTitle>
         </CardHeader>
@@ -67,8 +67,8 @@ export function DashboardSidebar({ lembretes }: DashboardSidebarProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Lightbulb className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+            <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5" />
             Dica do Dia
           </CardTitle>
         </CardHeader>

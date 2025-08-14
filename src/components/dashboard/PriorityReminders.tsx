@@ -99,8 +99,8 @@ export function PriorityReminders() {
   return (
     <Card className="border-orange-200 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-orange-800 dark:text-orange-200">
-          <AlertTriangle className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-orange-800 dark:text-orange-200 text-sm sm:text-base">
+          <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5" />
           Lembretes Prioritários ({priorityReminders.length})
         </CardTitle>
       </CardHeader>

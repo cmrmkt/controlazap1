@@ -18,7 +18,7 @@ export function TransactionSummaryCards({ receitas, despesas, saldo }: Transacti
           <TrendingUp className="h-4 w-4 text-green-600" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-green-600">
+          <div className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600">
             {formatCurrency(receitas)}
           </div>
         </CardContent>
@@ -30,7 +30,7 @@ export function TransactionSummaryCards({ receitas, despesas, saldo }: Transacti
           <TrendingDown className="h-4 w-4 text-red-600" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-red-600">
+          <div className="text-lg sm:text-xl lg:text-2xl font-bold text-red-600">
             {formatCurrency(despesas)}
           </div>
         </CardContent>
@@ -42,7 +42,7 @@ export function TransactionSummaryCards({ receitas, despesas, saldo }: Transacti
           <DollarSign className="h-4 w-4 text-primary" />
         </CardHeader>
         <CardContent>
-          <div className={`text-2xl font-bold ${saldo >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+          <div className={`text-lg sm:text-xl lg:text-2xl font-bold ${saldo >= 0 ? 'text-green-600' : 'text-red-600'}`}>
             {formatCurrency(saldo)}
           </div>
         </CardContent>

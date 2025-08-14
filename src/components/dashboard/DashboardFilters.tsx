@@ -20,17 +20,17 @@ export function DashboardFilters({
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Sistema de Gestão Financeira ControlaZap</h2>
-        <p className="text-muted-foreground">
+        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">Sistema de Gestão Financeira ControlaZap</h2>
+        <p className="text-sm sm:text-base text-muted-foreground">
           Visão geral das suas finanças pessoais
           {transactionCount > 0 && ` • ${transactionCount} transações encontradas`}
         </p>
       </div>
       
       <div className="flex gap-2 items-center">
-        <Filter className="h-4 w-4 text-muted-foreground" />
+        <Filter className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
         <Select value={filterMonth} onValueChange={setFilterMonth}>
-          <SelectTrigger className="w-32">
+          <SelectTrigger className="w-28 sm:w-32 text-sm">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -42,7 +42,7 @@ export function DashboardFilters({
           </SelectContent>
         </Select>
         <Select value={filterYear} onValueChange={setFilterYear}>
-          <SelectTrigger className="w-24">
+          <SelectTrigger className="w-20 sm:w-24 text-sm">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

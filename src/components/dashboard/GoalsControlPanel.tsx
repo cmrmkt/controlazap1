@@ -252,8 +252,8 @@ export function GoalsControlPanel({ transacoes }: GoalsControlPanelProps) {
       <Card className="group relative overflow-hidden bg-gradient-to-br from-emerald-500/10 to-emerald-600/20 border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/10 hover:-translate-y-1">
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-emerald-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         <CardHeader className="relative z-10">
-          <CardTitle className="flex items-center gap-2 text-emerald-700 dark:text-emerald-300">
-            <TrendingUp className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-emerald-700 dark:text-emerald-300 text-sm sm:text-base">
+            <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
             Meta de Receitas do Mês
           </CardTitle>
         </CardHeader>
@@ -288,7 +288,7 @@ export function GoalsControlPanel({ transacoes }: GoalsControlPanelProps) {
           <div className="bg-emerald-50/80 dark:bg-emerald-900/20 rounded-lg p-3 space-y-2">
             <div className="flex justify-between">
               <span className="text-sm font-medium text-muted-foreground">Atual:</span>
-              <span className="font-bold text-lg text-emerald-800 dark:text-emerald-200">{formatCurrency(goals.current_income)}</span>
+              <span className="font-bold text-base sm:text-lg text-emerald-800 dark:text-emerald-200">{formatCurrency(goals.current_income)}</span>
             </div>
             <div className="w-full bg-emerald-200/60 dark:bg-emerald-800/40 rounded-full h-4">
               <div 
@@ -313,8 +313,8 @@ export function GoalsControlPanel({ transacoes }: GoalsControlPanelProps) {
       <Card className="group relative overflow-hidden bg-gradient-to-br from-red-500/10 to-red-600/20 border-red-500/20 hover:border-red-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-red-500/10 hover:-translate-y-1">
         <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-red-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         <CardHeader className="relative z-10">
-          <CardTitle className="flex items-center gap-2 text-red-700 dark:text-red-300">
-            <Target className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-red-700 dark:text-red-300 text-sm sm:text-base">
+            <Target className="h-4 w-4 sm:h-5 sm:w-5" />
             Limite de Gastos do Mês
           </CardTitle>
         </CardHeader>
@@ -349,7 +349,7 @@ export function GoalsControlPanel({ transacoes }: GoalsControlPanelProps) {
           <div className="bg-red-50/80 dark:bg-red-900/20 rounded-lg p-3 space-y-2">
             <div className="flex justify-between">
               <span className="text-sm font-medium text-muted-foreground">Atual:</span>
-              <span className="font-bold text-lg text-red-800 dark:text-red-200">{formatCurrency(goals.current_expenses)}</span>
+              <span className="font-bold text-base sm:text-lg text-red-800 dark:text-red-200">{formatCurrency(goals.current_expenses)}</span>
             </div>
             <div className="w-full bg-red-200/60 dark:bg-red-800/40 rounded-full h-4">
               <div 

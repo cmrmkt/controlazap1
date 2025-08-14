@@ -384,8 +384,8 @@ export default function Perfil() {
       )}
 
       <div className="text-center md:text-left">
-        <h1 className="text-4xl font-bold tracking-tight">Meu Perfil</h1>
-        <p className="text-muted-foreground mt-2">Gerencie suas informações pessoais, assinatura e configurações de segurança</p>
+        <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight">Meu Perfil</h1>
+        <p className="text-sm sm:text-base text-muted-foreground mt-2">Gerencie suas informações pessoais, assinatura e configurações de segurança</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={(value) => {
