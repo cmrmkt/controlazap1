@@ -67,8 +67,11 @@ function AppRoutes() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen max-w-full flex items-center justify-center bg-background overflow-hidden">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-muted-foreground animate-pulse">Carregando...</p>
+        </div>
       </div>
     );
   }
@@ -89,28 +92,28 @@ function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/transacoes" element={
-          <Suspense fallback={<div className="p-6"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" /></div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             <Transacoes />
           </Suspense>
         } />
         <Route path="/categorias" element={
-          <Suspense fallback={<div className="p-6"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" /></div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             <Categorias />
           </Suspense>
         } />
         <Route path="/relatorios" element={
-          <Suspense fallback={<div className="p-6"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" /></div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             <Relatorios />
           </Suspense>
         } />
         <Route path="/lembretes" element={
-          <Suspense fallback={<div className="p-6"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" /></div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             <Lembretes />
           </Suspense>
         } />
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/whatsapp" element={
-          <Suspense fallback={<div className="p-6"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" /></div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             <WhatsApp />
           </Suspense>
         } />

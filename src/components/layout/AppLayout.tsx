@@ -17,23 +17,20 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
+      <div className="min-h-screen max-w-full flex w-full bg-background overflow-x-hidden">
         <AppSidebar />
-        <SidebarInset>
-          <header className="h-16 flex items-center justify-between px-4 sm:px-6 bg-card border-b shadow-sm sticky top-0 z-40">
-            <div className="flex items-center gap-4">
-              <SidebarTrigger />
-              <div className="flex items-center gap-3">
-                <h1 className="text-lg font-semibold title-color hidden sm:block">
-                  Gestão ControlaZap
-                </h1>
-                <h1 className="text-base font-semibold title-color sm:hidden">
-                  ControlaZap
+        <SidebarInset className="flex-1 min-w-0">
+          <header className="h-16 flex items-center justify-between px-3 sm:px-6 bg-card border-b shadow-sm sticky top-0 z-40 min-w-0">
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+              <SidebarTrigger className="shrink-0" />
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0 truncate">
+                <h1 className="text-base sm:text-lg font-semibold title-color truncate">
+                  {isMobile ? "ControlaZap" : "Gestão ControlaZap"}
                 </h1>
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
               <PaletteSwitcher />
               
               {/* Mobile logout button - always visible on mobile */}
@@ -42,17 +39,19 @@ export function AppLayout({ children }: AppLayoutProps) {
                   onClick={signOut}
                   variant="outline"
                   size="sm"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-1 px-2 sm:px-3"
                 >
                   <LogOut className="h-4 w-4" />
-                  <span className="text-xs">Sair</span>
+                  <span className="text-xs hidden xs:inline">Sair</span>
                 </Button>
               )}
             </div>
           </header>
-          <div className="flex-1 p-2 sm:p-6 bg-background transition-all duration-200 w-full min-w-0 overflow-x-hidden">
-            {children}
-          </div>
+          <main className="flex-1 p-2 sm:p-4 lg:p-6 bg-background min-w-0 max-w-full overflow-x-hidden">
+            <div className="w-full max-w-full mx-auto">
+              {children}
+            </div>
+          </main>
         </SidebarInset>
       </div>
     </SidebarProvider>
