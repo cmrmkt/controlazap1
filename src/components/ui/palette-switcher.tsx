@@ -18,8 +18,8 @@ const paletteOptions = [
   { 
     value: 'ocean' as PaletteType, 
     label: 'Oceano', 
-    description: 'Tons azuis claros',
-    colors: ['hsl(200 98% 39%)', 'hsl(210 40% 98%)', 'hsl(200 98% 95%)']
+    description: 'Tons azuis profundos',
+    colors: ['hsl(210 100% 56%)', 'hsl(220 30% 8%)', 'hsl(215 30% 12%)']
   },
   { 
     value: 'forest' as PaletteType, 
