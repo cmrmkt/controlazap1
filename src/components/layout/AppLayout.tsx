@@ -4,6 +4,7 @@ import { AppSidebar } from './AppSidebar'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@/components/ui/button'
+import { PaletteSwitcher } from '@/components/ui/palette-switcher'
 import { LogOut } from 'lucide-react'
 
 interface AppLayoutProps {
@@ -32,18 +33,22 @@ export function AppLayout({ children }: AppLayoutProps) {
               </div>
             </div>
             
-            {/* Mobile logout button - always visible on mobile */}
-            {isMobile && (
-              <Button
-                onClick={signOut}
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                <LogOut className="h-4 w-4" />
-                <span className="text-xs">Sair</span>
-              </Button>
-            )}
+            <div className="flex items-center gap-2">
+              <PaletteSwitcher />
+              
+              {/* Mobile logout button - always visible on mobile */}
+              {isMobile && (
+                <Button
+                  onClick={signOut}
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span className="text-xs">Sair</span>
+                </Button>
+              )}
+            </div>
           </header>
           <div className="flex-1 p-2 sm:p-6 bg-background transition-all duration-200 w-full min-w-0 overflow-x-hidden">
             {children}

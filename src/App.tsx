@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/hooks/useTheme";
+import { PaletteProvider } from "@/contexts/PaletteContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Suspense, lazy } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -125,13 +126,15 @@ const App = () => (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider defaultTheme="dark" storageKey="financeflow-theme">
-          <AuthProvider>
+          <PaletteProvider>
+            <AuthProvider>
             <TooltipProvider>
               <Toaster />
               <Sonner />
               <AppRoutes />
             </TooltipProvider>
-          </AuthProvider>
+            </AuthProvider>
+          </PaletteProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </BrowserRouter>
