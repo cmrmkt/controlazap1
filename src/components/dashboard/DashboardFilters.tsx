@@ -19,19 +19,12 @@ export function DashboardFilters({
 }: DashboardFiltersProps) {
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        <img 
-          src="/lovable-uploads/a1905fc1-9bc7-4e86-9542-961da6ddf409.png" 
-          alt="ControlaZap Logo" 
-          className="h-8 sm:h-10 w-auto object-contain"
-        />
-        <div>
-          <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">Sistema de Gestão Financeira</h2>
-          <p className="text-sm sm:text-base text-muted-foreground">
-            Visão geral das suas finanças pessoais
-            {transactionCount > 0 && ` • ${transactionCount} transações encontradas`}
-          </p>
-        </div>
+      <div>
+        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">Sistema de Gestão Financeira</h2>
+        <p className="text-sm sm:text-base text-muted-foreground">
+          Visão geral das suas finanças pessoais
+          {transactionCount > 0 && ` • ${transactionCount} transações encontradas`}
+        </p>
       </div>
       
       <div className="flex gap-2 items-center">

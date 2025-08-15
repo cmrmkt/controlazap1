@@ -128,7 +128,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
           <img 
             src="/lovable-uploads/a1905fc1-9bc7-4e86-9542-961da6ddf409.png" 
             alt="ControlaZap Logo" 
-            className="h-12 sm:h-16 w-auto object-contain mb-3"
+            className="h-16 sm:h-20 w-auto object-contain mb-4 max-w-full"
           />
         </div>
         <h1 className="text-base sm:text-lg font-bold text-white mb-2">

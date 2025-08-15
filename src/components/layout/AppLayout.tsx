@@ -27,7 +27,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 <img 
                   src="/lovable-uploads/a1905fc1-9bc7-4e86-9542-961da6ddf409.png" 
                   alt="ControlaZap Logo" 
-                  className={`${isMobile ? 'h-6' : 'h-8'} w-auto object-contain`}
+                  className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto object-contain max-w-full"
                 />
               </div>
             </div>
