@@ -124,6 +124,13 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
   return (
     <div className="w-full mx-auto">
       <div className="text-start py-4 sm:py-6 lg:py-8">
+        <div className="flex flex-col items-start mb-4">
+          <img 
+            src="/lovable-uploads/a1905fc1-9bc7-4e86-9542-961da6ddf409.png" 
+            alt="ControlaZap Logo" 
+            className="h-12 sm:h-16 w-auto object-contain mb-3"
+          />
+        </div>
         <h1 className="text-base sm:text-lg font-bold text-white mb-2">
           Bem-vindo ao ControlaZap
         </h1>

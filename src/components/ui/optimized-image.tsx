@@ -120,8 +120,12 @@ export const OptimizedImage = React.forwardRef<HTMLImageElement, OptimizedImageP
         {/* Error state */}
         {isError && (
           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 text-primary text-sm font-medium">
-            <div className="text-center">
-              <div className="text-lg font-bold mb-2">ControlaZap</div>
+            <div className="text-center flex flex-col items-center">
+              <img 
+                src="/lovable-uploads/a1905fc1-9bc7-4e86-9542-961da6ddf409.png" 
+                alt="ControlaZap Logo" 
+                className="h-12 w-auto object-contain mb-2"
+              />
               <div className="text-xs opacity-70">Imagem em carregamento...</div>
             </div>
           </div>

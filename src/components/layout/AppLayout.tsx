@@ -24,9 +24,11 @@ export function AppLayout({ children }: AppLayoutProps) {
             <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
               <SidebarTrigger className="shrink-0" />
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 truncate">
-                <h1 className="text-base sm:text-lg font-semibold title-color truncate">
-                  {isMobile ? "ControlaZap" : "Gestão ControlaZap"}
-                </h1>
+                <img 
+                  src="/lovable-uploads/a1905fc1-9bc7-4e86-9542-961da6ddf409.png" 
+                  alt="ControlaZap Logo" 
+                  className={`${isMobile ? 'h-6' : 'h-8'} w-auto object-contain`}
+                />
               </div>
             </div>
             
