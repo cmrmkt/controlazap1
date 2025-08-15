@@ -28,6 +28,9 @@ export function AppLayout({ children }: AppLayoutProps) {
                   src="/lovable-uploads/a1905fc1-9bc7-4e86-9542-961da6ddf409.png" 
                   alt="ControlaZap Logo" 
                   className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto object-contain max-w-full"
+                  onError={(e) => {
+                    e.currentTarget.src = "/lovable-uploads/a825564f-6c05-44c5-b5c9-f306668546b1.png";
+                  }}
                 />
               </div>
             </div>

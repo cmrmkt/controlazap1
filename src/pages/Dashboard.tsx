@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client'
 import { useAuth } from '@/hooks/useAuth'
 import { toast } from '@/hooks/use-toast'
 import { RemindersProvider, useReminders } from '@/contexts/RemindersContext'
-import { useRealtimeSync } from '@/hooks/useRealtimeSync'
+import { useGlobalRealtime } from '@/hooks/useGlobalRealtime'
 import { DashboardStats } from '@/components/dashboard/DashboardStats'
 import { DashboardFilters } from '@/components/dashboard/DashboardFilters'
 import { DashboardCharts } from '@/components/dashboard/DashboardCharts'
@@ -52,7 +52,7 @@ function DashboardContent() {
   const [refreshKey, setRefreshKey] = useState(0)
 
   // Configure real-time synchronization
-  useRealtimeSync()
+  useGlobalRealtime()
   
   // Estados dos filtros
   const [filterMonth, setFilterMonth] = useState(new Date().getMonth().toString())
@@ -71,7 +71,7 @@ function DashboardContent() {
     const interval = setInterval(() => {
       console.log('[DASHBOARD] Auto-refreshing data for N8N sync fallback...');
       fetchData();
-    }, 30000); // Refresh every 30 seconds
+    }, 60000); // Refresh every 60 seconds (reduced from 30s)
 
     return () => clearInterval(interval);
   }, [user])

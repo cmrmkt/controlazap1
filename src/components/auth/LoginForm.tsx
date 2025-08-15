@@ -129,6 +129,9 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
             src="/lovable-uploads/a1905fc1-9bc7-4e86-9542-961da6ddf409.png" 
             alt="ControlaZap Logo" 
             className="h-16 sm:h-20 w-auto object-contain mb-4 max-w-full"
+            onError={(e) => {
+              e.currentTarget.src = "/lovable-uploads/a825564f-6c05-44c5-b5c9-f306668546b1.png";
+            }}
           />
         </div>
         <h1 className="text-base sm:text-lg font-bold text-white mb-2">
