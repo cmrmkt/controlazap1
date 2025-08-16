@@ -25,11 +25,11 @@ export function AppLayout({ children }: AppLayoutProps) {
               <SidebarTrigger className="shrink-0" />
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 truncate">
                 <img 
-                  src="/lovable-uploads/e14c2627-dcc5-4d80-8ae7-decce360201e.png" 
+                  src="/lovable-uploads/4ac3dc85-b2c5-4f9c-afa8-b2ff144288a4.png" 
                   alt="ControlaZap Logo" 
                   className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto object-contain max-w-full"
                   onError={(e) => {
-                    e.currentTarget.src = "/lovable-uploads/e14c2627-dcc5-4d80-8ae7-decce360201e.png";
+                    e.currentTarget.src = "/lovable-uploads/4ac3dc85-b2c5-4f9c-afa8-b2ff144288a4.png";
                   }}
                 />
               </div>

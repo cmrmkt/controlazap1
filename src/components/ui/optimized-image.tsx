@@ -122,7 +122,7 @@ export const OptimizedImage = React.forwardRef<HTMLImageElement, OptimizedImageP
           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 text-primary text-sm font-medium">
             <div className="text-center flex flex-col items-center">
               <img 
-                src="/lovable-uploads/e14c2627-dcc5-4d80-8ae7-decce360201e.png" 
+                src="/lovable-uploads/4ac3dc85-b2c5-4f9c-afa8-b2ff144288a4.png" 
                 alt="ControlaZap Logo" 
                 className="h-12 w-auto object-contain mb-2"
               />
