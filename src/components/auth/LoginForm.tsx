@@ -126,11 +126,11 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
       <div className="text-start py-4 sm:py-6 lg:py-8">
         <div className="flex flex-col items-start mb-4">
           <img 
-            src="/lovable-uploads/4ac3dc85-b2c5-4f9c-afa8-b2ff144288a4.png" 
+            src="/lovable-uploads/bc282fcb-3349-4781-a836-6db740525a5d.png" 
             alt="ControlaZap Logo" 
             className="h-16 sm:h-20 w-auto object-contain mb-4 max-w-full"
             onError={(e) => {
-              e.currentTarget.src = "/lovable-uploads/4ac3dc85-b2c5-4f9c-afa8-b2ff144288a4.png";
+              e.currentTarget.src = "/lovable-uploads/bc282fcb-3349-4781-a836-6db740525a5d.png";
             }}
           />
         </div>
