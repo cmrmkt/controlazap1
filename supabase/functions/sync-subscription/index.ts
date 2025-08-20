@@ -130,7 +130,11 @@ serve(async (req) => {
     const isAsaas = (profile.assinaturaid && profile.assinaturaid.startsWith('ASA')) ||
                     (profile.customerid && profile.customerid.startsWith('ASA'));
     
-    logStep("Subscription type detected", { isPerfectPay, isAsaas, subscriptionId });
+    // Verificar se é Kiwify (assinaturaid ou customerid que começam com 'KW_' ou 'kiwify_')
+    const isKiwify = (profile.assinaturaid && (profile.assinaturaid.startsWith('KW_') || profile.assinaturaid.startsWith('kiwify_'))) ||
+                     (profile.customerid && (profile.customerid.startsWith('KW_') || profile.customerid.startsWith('kiwify_')));
+    
+    logStep("Subscription type detected", { isPerfectPay, isAsaas, isKiwify, subscriptionId });
     
     if (isPerfectPay) {
       logStep("Perfect Pay subscription detected", { subscriptionId });
@@ -203,6 +207,81 @@ serve(async (req) => {
         success: true, 
         data: savedData,
         message: "Perfect Pay subscription synchronized successfully"
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      });
+    }
+
+    if (isKiwify) {
+      logStep("Kiwify subscription detected", { subscriptionId });
+      
+      // Primeiro verificar se já existe um registro
+      const { data: existingSubscription } = await supabaseClient
+        .from('subscriptions')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('subscription_id', subscriptionId)
+        .maybeSingle();
+
+      if (existingSubscription) {
+        logStep("Found existing Kiwify subscription", existingSubscription);
+        return new Response(JSON.stringify({ 
+          success: true, 
+          data: existingSubscription,
+          message: "Kiwify subscription found"
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        });
+      }
+      
+      // Se não existe, criar novo registro para Kiwify
+      const currentDate = new Date().toISOString();
+      const kiwifyData = {
+        user_id: user.id,
+        subscription_id: subscriptionId,
+        status: 'active',
+        plan_name: 'Kiwify - Plano Anual',
+        amount: 5.00,
+        currency: 'BRL',
+        cycle: 'yearly',
+        start_date: currentDate,
+        next_payment_date: calculateNextPaymentDate(currentDate, 'yearly'),
+        payment_method: 'credit_card',
+        card_last_four: null,
+        card_brand: 'Kiwify',
+        updated_at: currentDate,
+      };
+
+      const { data: savedData, error: saveError } = await supabaseClient
+        .from('subscriptions')
+        .upsert(kiwifyData, { 
+          onConflict: 'user_id,subscription_id',
+          ignoreDuplicates: false 
+        })
+        .select()
+        .single();
+
+      if (saveError) {
+        logStep("Error saving Kiwify subscription data", saveError);
+        
+        return new Response(JSON.stringify({ 
+          success: true, 
+          data: kiwifyData,
+          message: "Kiwify subscription data (fallback due to save error)"
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        });
+      }
+
+      logStep("Kiwify subscription data saved successfully", savedData);
+
+      return new Response(JSON.stringify({ 
+        success: true, 
+        data: savedData,
+        message: "Kiwify subscription synchronized successfully"
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,

@@ -82,7 +82,7 @@ serve(async (req) => {
     let finalSubscriptionId = subscription_id;
     let detectedProvider = payment_provider;
 
-    // Detectar Perfect Pay vs Asaas automaticamente
+    // Detectar Perfect Pay vs Asaas vs Kiwify automaticamente
     if (!detectedProvider) {
       if (subscription_id === 'active' || !subscription_id) {
         detectedProvider = 'perfectpay';
@@ -90,6 +90,9 @@ serve(async (req) => {
       } else if (subscription_id?.startsWith('sub_')) {
         detectedProvider = 'asaas';
         finalSubscriptionId = subscription_id;
+      } else if (subscription_id?.startsWith('KW_') || subscription_id?.includes('kiwify')) {
+        detectedProvider = 'kiwify';
+        finalSubscriptionId = subscription_id.startsWith('KW_') ? subscription_id : `KW_${subscription_id}`;
       } else {
         detectedProvider = 'unknown';
         finalSubscriptionId = subscription_id || `unknown_${result.user_id.substring(0, 8)}`;
@@ -123,7 +126,8 @@ serve(async (req) => {
       user_id: result.user_id,
       subscription_id: finalSubscriptionId,
       status: 'active',
-      plan_name: detectedProvider === 'perfectpay' ? 'Perfect Pay - Plano Anual' : 'Asaas - Plano Anual',
+      plan_name: detectedProvider === 'perfectpay' ? 'Perfect Pay - Plano Anual' : 
+                 detectedProvider === 'kiwify' ? 'Kiwify - Plano Anual' : 'Asaas - Plano Anual',
       amount: 5.00,
       currency: 'BRL',
       cycle: 'yearly',
