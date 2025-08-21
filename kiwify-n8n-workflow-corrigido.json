@@ -125,7 +125,7 @@
         },
         "sendBody": true,
         "contentType": "json",
-        "jsonBody": "={\n  \"email\": \"{{ $json.customerEmail }}\",\n  \"phone\": \"{{ $json.customerPhone }}\",\n  \"name\": \"{{ $json.customerName }}\",\n  \"subscription_id\": \"{{ $json.subscriptionId }}\",\n  \"payment_provider\": \"kiwify\",\n  \"subscription_status\": \"active\",\n  \"plan_name\": \"ControlaZap Pro\",\n  \"amount\": 2990,\n  \"currency\": \"BRL\",\n  \"event_type\": \"{{ $json.eventType }}\",\n  \"customer_id\": \"{{ $json.customerId }}\"\n}",
+        "jsonBody": "{\n  \"email\": \"{{ $json.customerEmail }}\",\n  \"phone\": \"{{ $json.customerPhone }}\",\n  \"name\": \"{{ $json.customerName }}\",\n  \"subscription_id\": \"{{ $json.subscriptionId }}\",\n  \"payment_provider\": \"kiwify\",\n  \"subscription_status\": \"active\",\n  \"plan_name\": \"ControlaZap Pro\",\n  \"amount\": 2990,\n  \"currency\": \"BRL\",\n  \"event_type\": \"{{ $json.eventType }}\",\n  \"customer_id\": \"{{ $json.customerId }}\"\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
