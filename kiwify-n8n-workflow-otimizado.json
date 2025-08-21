@@ -47,7 +47,7 @@
             {
               "id": "9968c50e-f26f-4fe5-8da4-0c5beaa7095i",
               "name": "eventType",
-              "value": "={{ $json.body.event || $json.body.event_type || 'compra_aprovada' }}",
+              "value": "={{ $json.body.webhook_event_type || $json.body.event || $json.body.event_type || 'order_approved' }}",
               "type": "string"
             },
             {
@@ -86,8 +86,8 @@
           "conditions": [
             {
               "id": "4d50f7a5-9326-4c2e-8856-4d64d98c2b54",
-              "leftValue": "={{ $json.eventType || 'compra_aprovada' }}",
-              "rightValue": "compra_aprovada",
+              "leftValue": "={{ $json.eventType || 'order_approved' }}",
+              "rightValue": "order_approved",
               "operator": {
                 "type": "string",
                 "operation": "equals"
@@ -213,7 +213,7 @@
     },
     {
       "parameters": {
-        "content": "## ControlaZap - Integração Kiwify Otimizada\n\n**Fluxo do Webhook:**\n1. 🎯 Recebe webhook da Kiwify\n2. 📋 Extrai dados do cliente (email, nome, telefone)\n3. ✅ Filtra apenas eventos \"compra_aprovada\"\n4. 📱 Verifica número do WhatsApp\n5. 👤 Cria/atualiza usuário via user-registration-webhook\n6. 💬 Envia confirmação via WhatsApp\n7. 📧 Envia email de boas-vindas\n\n**Melhorias implementadas:**\n• Usa user-registration-webhook ao invés de auth direto\n• Filtro de eventos para processar apenas compras aprovadas\n• Template de email responsivo com logo ControlaZap\n• Tratamento robusto de dados da Kiwify\n• URLs atualizadas para o projeto atual",
+        "content": "## ControlaZap - Integração Kiwify Otimizada\n\n**Fluxo do Webhook:**\n1. 🎯 Recebe webhook da Kiwify\n2. 📋 Extrai dados do cliente (email, nome, telefone)\n3. ✅ Filtra apenas eventos \"order_approved\"\n4. 📱 Verifica número do WhatsApp\n5. 👤 Cria/atualiza usuário via user-registration-webhook\n6. 💬 Envia confirmação via WhatsApp\n7. 📧 Envia email de boas-vindas\n\n**Correções implementadas:**\n• Mapeamento correto do evento: webhook_event_type\n• Filtro atualizado para \"order_approved\"\n• Tratamento robusto de dados da Kiwify\n• Template de email responsivo com logo ControlaZap\n• URLs atualizadas para o projeto atual",
         "height": 480,
         "width": 1240,
         "color": 2
