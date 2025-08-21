@@ -41,8 +41,14 @@
             {
               "id": "8968c50e-f26f-4fe5-8da4-0c5beaa7095h",
               "name": "customerPhone",
-              "value": "={{ $json.body.Customer.mobile || $json.body.Customer.mobile_phone || $json.body.customer.mobile || $json.body.customer.mobile_phone || '11999999999' }}",
+              "value": "={{ ($json.body.Customer.mobile || $json.body.customer.mobile || $json.body.Customer.mobile_phone || $json.body.customer.mobile_phone || '11999999999').replace(/[^0-9]/g, '').replace(/^55/, '') }}",
               "type": "string"
+            },
+            {
+              "id": "d968c50e-f26f-4fe5-8da4-0c5beaa7095m",
+              "name": "isProduction",
+              "value": "={{ $json.body.webhook_event_type === 'order_approved' }}",
+              "type": "boolean"
             },
             {
               "id": "9968c50e-f26f-4fe5-8da4-0c5beaa7095i",
@@ -85,7 +91,7 @@
       "parameters": {
         "resource": "chat-api",
         "instanceName": "controlazap",
-        "numbers": "=55{{ $json.customerPhone }}"
+        "numbers": "=55{{ $json.customerPhone.replace(/^55/, '') }}"
       },
       "type": "n8n-nodes-evolution-api.evolutionApi",
       "typeVersion": 1,
@@ -119,7 +125,7 @@
         },
         "sendBody": true,
         "contentType": "json",
-        "jsonBody": "={\n  \"email\": \"{{ $json.customerEmail }}\",\n  \"phone\": \"{{ $('VerificaNumeroWhatsKiwify').item.json.data[0]?.jid?.split('@')[0] || $json.customerPhone }}\",\n  \"name\": \"{{ $json.customerName }}\",\n  \"subscription_id\": \"{{ $json.subscriptionId }}\",\n  \"payment_provider\": \"kiwify\",\n  \"subscription_status\": \"active\",\n  \"plan_name\": \"ControlaZap\",\n  \"amount\": 29.90,\n  \"currency\": \"BRL\"\n}",
+        "jsonBody": "={\n  \"email\": \"{{ $json.customerEmail }}\",\n  \"phone\": \"{{ $json.customerPhone }}\",\n  \"name\": \"{{ $json.customerName }}\",\n  \"subscription_id\": \"{{ $json.subscriptionId }}\",\n  \"payment_provider\": \"kiwify\",\n  \"subscription_status\": \"active\",\n  \"plan_name\": \"ControlaZap Pro\",\n  \"amount\": {{ $json.body.Commissions?.my_commission || 2990 }},\n  \"currency\": \"BRL\",\n  \"event_type\": \"{{ $json.eventType }}\",\n  \"order_id\": \"{{ $json.body.order_id }}\"\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -141,8 +147,8 @@
       "parameters": {
         "resource": "messages-api",
         "instanceName": "controlazap",
-        "remoteJid": "={{ $('VerificaNumeroWhatsKiwify').item.json.data[0]?.jid || '55' + $json.customerPhone + '@s.whatsapp.net' }}",
-        "messageText": "=🎉 *Parabéns, {{ $json.customerName.split(' ')[0] }}!*\n\nSua compra foi confirmada com sucesso! ✅\n\nAgora você tem acesso completo ao *ControlaZap* - sua plataforma de controle financeiro inteligente.\n\n📧 Verifique seu email *{{ $json.customerEmail }}* para receber seus dados de acesso.\n\n💡 *Com o ControlaZap você pode:*\n• Controlar receitas e despesas automaticamente\n• Receber lembretes inteligentes\n• Conversar com nosso assistente financeiro\n• Gerar relatórios detalhados\n\n📊 Debug Info: {{ $json.debugInfo }}\n\nBem-vindo(a) à família ControlaZap! 🚀",
+        "remoteJid": "={{ $('VerificaNumeroWhatsKiwify').item.json.data[0]?.jid || '55' + $json.customerPhone.replace(/^55/, '') + '@s.whatsapp.net' }}",
+        "messageText": "={{ $json.isProduction ? '🎉 *Parabéns, ' + $json.customerName.split(' ')[0] + '!*\n\nSua compra foi confirmada com sucesso! ✅\n\nAgora você tem acesso completo ao *ControlaZap* - sua plataforma de controle financeiro inteligente.\n\n📧 Verifique seu email *' + $json.customerEmail + '* para receber seus dados de acesso.\n\n💡 *Com o ControlaZap você pode:*\n• Controlar receitas e despesas automaticamente\n• Receber lembretes inteligentes\n• Conversar com nosso assistente financeiro\n• Gerar relatórios detalhados\n\nBem-vindo(a) à família ControlaZap! 🚀' : '🧪 *TESTE - Parabéns, ' + $json.customerName.split(' ')[0] + '!*\n\n✅ Fluxo de integração Kiwify funcionando!\n\n📊 Debug Info: ' + $json.debugInfo + '\n\n📧 Email: ' + $json.customerEmail + '\n📱 Telefone: ' + $json.customerPhone + '\n🆔 Subscription: ' + $json.subscriptionId + '\n\n🚀 Integração ControlaZap - Modo Teste' }}",
         "options_message": {}
       },
       "type": "n8n-nodes-evolution-api.evolutionApi",
@@ -163,8 +169,8 @@
     {
       "parameters": {
         "sendTo": "={{ $json.customerEmail }}",
-        "subject": "🎉 Bem-vindo ao ControlaZap - Sua conta está ativa!",
-        "message": "=<h2>🎉 Integração Kiwify - ControlaZap</h2>\n\n<p><strong>Dados recebidos e processados:</strong></p>\n<ul>\n<li><strong>Nome:</strong> {{ $json.customerName }}</li>\n<li><strong>Email:</strong> {{ $json.customerEmail }}</li>\n<li><strong>Telefone:</strong> {{ $json.customerPhone }}</li>\n<li><strong>ID Cliente:</strong> {{ $json.customerId }}</li>\n<li><strong>Subscription:</strong> {{ $json.subscriptionId }}</li>\n<li><strong>Evento:</strong> {{ $json.eventType }}</li>\n</ul>\n\n<p><strong>Debug Info:</strong> {{ $json.debugInfo }}</p>\n\n<p>✅ Fluxo completo executado com sucesso!</p>\n\n<p>Sua conta no ControlaZap já está ativa e você pode começar a usar nossa plataforma de controle financeiro.</p>",
+        "subject": "={{ $json.isProduction ? '🎉 Bem-vindo ao ControlaZap - Sua conta está ativa!' : '🧪 TESTE - Integração Kiwify ControlaZap' }}",
+        "message": "={{ $json.isProduction ? '<h2>🎉 Bem-vindo ao ControlaZap!</h2>\n\n<p>Olá <strong>' + $json.customerName + '</strong>,</p>\n\n<p>Parabéns! Sua compra foi confirmada e sua conta no ControlaZap já está ativa.</p>\n\n<p><strong>Seus dados de acesso:</strong></p>\n<ul>\n<li><strong>Email:</strong> ' + $json.customerEmail + '</li>\n<li><strong>Plano:</strong> ControlaZap Pro</li>\n<li><strong>Status:</strong> Ativo</li>\n</ul>\n\n<p>🚀 <strong>Próximos passos:</strong></p>\n<ol>\n<li>Acesse a plataforma: <a href=\"https://controlazap.com\">controlazap.com</a></li>\n<li>Faça seu primeiro login com seu email</li>\n<li>Configure seus lembretes financeiros</li>\n<li>Conecte sua conta WhatsApp</li>\n</ol>\n\n<p>Bem-vindo(a) à família ControlaZap! 💙</p>' : '<h2>🧪 TESTE - Integração Kiwify</h2>\n\n<p><strong>Dados recebidos e processados:</strong></p>\n<ul>\n<li><strong>Nome:</strong> ' + $json.customerName + '</li>\n<li><strong>Email:</strong> ' + $json.customerEmail + '</li>\n<li><strong>Telefone:</strong> ' + $json.customerPhone + '</li>\n<li><strong>ID Cliente:</strong> ' + $json.customerId + '</li>\n<li><strong>Subscription:</strong> ' + $json.subscriptionId + '</li>\n<li><strong>Evento:</strong> ' + $json.eventType + '</li>\n</ul>\n\n<p><strong>Debug Info:</strong> ' + $json.debugInfo + '</p>\n\n<p>✅ Fluxo completo executado com sucesso!</p>' }}",
         "options": {
           "appendAttribution": false
         }
