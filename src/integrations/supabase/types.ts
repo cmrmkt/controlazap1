@@ -395,6 +395,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      find_or_create_user_by_contact: {
+        Args: {
+          contact_info: string
+          contact_type?: string
+          user_name?: string
+        }
+        Returns: Json
+      }
       is_admin: {
         Args: { user_id: string }
         Returns: boolean
