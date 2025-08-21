@@ -23,55 +23,55 @@
             {
               "id": "8f748fe2-c181-4a81-8fe6-91cb462edc9f",
               "name": "customerId",
-              "value": "={{ ($json.body.Customer && $json.body.Customer.id) || ($json.body.customer && $json.body.customer.id) || $json.body.id || 'TEST_123' }}",
+              "value": "={{ $json.Customer?.id || $json.customer?.id || $json.id || 'TEST_123' }}",
               "type": "string"
             },
             {
               "id": "6968c50e-f26f-4fe5-8da4-0c5beaa7095f",
               "name": "customerEmail",
-              "value": "={{ ($json.body.Customer && $json.body.Customer.email) || ($json.body.customer && $json.body.customer.email) || $json.body.email || 'teste@controlazap.com' }}",
+              "value": "={{ $json.Customer?.email || $json.customer?.email || $json.email || 'teste@controlazap.com' }}",
               "type": "string"
             },
             {
               "id": "7968c50e-f26f-4fe5-8da4-0c5beaa7095g",
               "name": "customerName",
-              "value": "={{ ($json.body.Customer && $json.body.Customer.full_name) || ($json.body.customer && $json.body.customer.full_name) || ($json.body.Customer && $json.body.Customer.name) || ($json.body.customer && $json.body.customer.name) || $json.body.name || 'Usuario Teste' }}",
+              "value": "={{ $json.Customer?.full_name || $json.customer?.full_name || $json.Customer?.name || $json.customer?.name || $json.name || 'Usuario Teste' }}",
               "type": "string"
             },
             {
               "id": "8968c50e-f26f-4fe5-8da4-0c5beaa7095h",
               "name": "customerPhone",
-              "value": "={{ (($json.body.Customer && $json.body.Customer.mobile) || ($json.body.customer && $json.body.customer.mobile) || ($json.body.Customer && $json.body.Customer.mobile_phone) || ($json.body.customer && $json.body.customer.mobile_phone) || $json.body.mobile || $json.body.phone || '11999999999').replace(/[^0-9]/g, '').replace(/^55/, '') }}",
+              "value": "={{ ($json.Customer?.mobile || $json.customer?.mobile || $json.Customer?.mobile_phone || $json.customer?.mobile_phone || $json.mobile || $json.phone || '11999999999').replace(/[^0-9]/g, '').replace(/^55/, '') }}",
               "type": "string"
             },
             {
               "id": "d968c50e-f26f-4fe5-8da4-0c5beaa7095m",
               "name": "isProduction",
-              "value": "={{ $json.body.webhook_event_type === 'order_approved' }}",
+              "value": "={{ $json.webhook_event_type === 'order_approved' }}",
               "type": "boolean"
             },
             {
               "id": "9968c50e-f26f-4fe5-8da4-0c5beaa7095i",
               "name": "eventType",
-              "value": "={{ $json.body.webhook_event_type || $json.body.event || $json.body.event_type || 'order_approved' }}",
+              "value": "={{ $json.webhook_event_type || $json.event || $json.event_type || 'order_approved' }}",
               "type": "string"
             },
             {
               "id": "a968c50e-f26f-4fe5-8da4-0c5beaa7095j",
               "name": "subscriptionId",
-              "value": "={{ $json.body.subscription_id || $json.body.order_id || 'KW_' + (($json.body.Customer && $json.body.Customer.id) || ($json.body.customer && $json.body.customer.id) || $json.body.id || 'TEST_123') }}",
+              "value": "={{ $json.subscription_id || $json.order_id || 'KW_' + ($json.Customer?.id || $json.customer?.id || $json.id || 'TEST_123') }}",
               "type": "string"
             },
             {
               "id": "b968c50e-f26f-4fe5-8da4-0c5beaa7095k",
               "name": "payloadCompleto",
-              "value": "={{ JSON.stringify($json.body) }}",
+              "value": "={{ JSON.stringify($json) }}",
               "type": "string"
             },
             {
               "id": "c968c50e-f26f-4fe5-8da4-0c5beaa7095l",
               "name": "debugInfo",
-              "value": "={{ 'Dados extraídos: ID=' + (($json.body.Customer && $json.body.Customer.id) || ($json.body.customer && $json.body.customer.id) || 'N/A') + ' | Email=' + (($json.body.Customer && $json.body.Customer.email) || ($json.body.customer && $json.body.customer.email) || 'N/A') + ' | Evento=' + ($json.body.webhook_event_type || $json.body.event || $json.body.event_type || 'N/A') }}",
+              "value": "={{ 'Dados extraídos: ID=' + ($json.Customer?.id || $json.customer?.id || 'N/A') + ' | Email=' + ($json.Customer?.email || $json.customer?.email || 'N/A') + ' | Evento=' + ($json.webhook_event_type || $json.event || $json.event_type || 'N/A') }}",
               "type": "string"
             }
           ]
