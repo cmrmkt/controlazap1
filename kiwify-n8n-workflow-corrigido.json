@@ -23,25 +23,25 @@
             {
               "id": "8f748fe2-c181-4a81-8fe6-91cb462edc9f",
               "name": "customerId",
-              "value": "={{ $json.body.Customer.id || $json.body.customer.id || 'TEST_123' }}",
+              "value": "={{ $json.body.Customer?.id || $json.body.customer?.id || $json.body.id || 'TEST_123' }}",
               "type": "string"
             },
             {
               "id": "6968c50e-f26f-4fe5-8da4-0c5beaa7095f",
               "name": "customerEmail",
-              "value": "={{ $json.body.Customer.email || $json.body.customer.email || 'teste@controlazap.com' }}",
+              "value": "={{ $json.body.Customer?.email || $json.body.customer?.email || $json.body.email || 'teste@controlazap.com' }}",
               "type": "string"
             },
             {
               "id": "7968c50e-f26f-4fe5-8da4-0c5beaa7095g",
               "name": "customerName",
-              "value": "={{ $json.body.Customer.full_name || $json.body.customer.full_name || $json.body.Customer.name || $json.body.customer.name || 'Usuario Teste' }}",
+              "value": "={{ $json.body.Customer?.full_name || $json.body.customer?.full_name || $json.body.Customer?.name || $json.body.customer?.name || $json.body.name || 'Usuario Teste' }}",
               "type": "string"
             },
             {
               "id": "8968c50e-f26f-4fe5-8da4-0c5beaa7095h",
               "name": "customerPhone",
-              "value": "={{ ($json.body.Customer.mobile || $json.body.customer.mobile || $json.body.Customer.mobile_phone || $json.body.customer.mobile_phone || '11999999999').replace(/[^0-9]/g, '').replace(/^55/, '') }}",
+              "value": "={{ ($json.body.Customer?.mobile || $json.body.customer?.mobile || $json.body.Customer?.mobile_phone || $json.body.customer?.mobile_phone || $json.body.mobile || $json.body.phone || '11999999999').replace(/[^0-9]/g, '').replace(/^55/, '') }}",
               "type": "string"
             },
             {
@@ -59,7 +59,7 @@
             {
               "id": "a968c50e-f26f-4fe5-8da4-0c5beaa7095j",
               "name": "subscriptionId",
-              "value": "={{ $json.body.subscription_id || $json.body.order_id || 'KW_' + ($json.body.Customer.id || $json.body.customer.id || 'TEST_123') }}",
+              "value": "={{ $json.body.subscription_id || $json.body.order_id || 'KW_' + ($json.body.Customer?.id || $json.body.customer?.id || $json.body.id || 'TEST_123') }}",
               "type": "string"
             },
             {
