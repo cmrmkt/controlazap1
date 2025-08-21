@@ -1,0 +1,261 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "kiwify-webhook-teste",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        64,
+        2304
+      ],
+      "id": "462421da-8016-48e4-9e17-4e87ceb3f978",
+      "name": "WebhookKiwify",
+      "webhookId": "1a643f5c-49e7-41a6-b41c-5fd8f7093585"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8f748fe2-c181-4a81-8fe6-91cb462edc9f",
+              "name": "customerId",
+              "value": "={{ $json.body.Customer.id || $json.body.customer.id || 'TEST_123' }}",
+              "type": "string"
+            },
+            {
+              "id": "6968c50e-f26f-4fe5-8da4-0c5beaa7095f",
+              "name": "customerEmail",
+              "value": "={{ $json.body.Customer.email || $json.body.customer.email || 'teste@controlazap.com' }}",
+              "type": "string"
+            },
+            {
+              "id": "7968c50e-f26f-4fe5-8da4-0c5beaa7095g",
+              "name": "customerName",
+              "value": "={{ $json.body.Customer.full_name || $json.body.customer.full_name || $json.body.Customer.name || $json.body.customer.name || 'Usuario Teste' }}",
+              "type": "string"
+            },
+            {
+              "id": "8968c50e-f26f-4fe5-8da4-0c5beaa7095h",
+              "name": "customerPhone",
+              "value": "={{ $json.body.Customer.mobile_phone || $json.body.customer.mobile_phone || $json.body.Customer.mobile || $json.body.customer.mobile || '11999999999' }}",
+              "type": "string"
+            },
+            {
+              "id": "9968c50e-f26f-4fe5-8da4-0c5beaa7095i",
+              "name": "eventType",
+              "value": "={{ $json.body.event || $json.body.event_type || 'compra_aprovada' }}",
+              "type": "string"
+            },
+            {
+              "id": "a968c50e-f26f-4fe5-8da4-0c5beaa7095j",
+              "name": "subscriptionId",
+              "value": "={{ $json.body.subscription_id || $json.body.order_id || 'KW_' + ($json.body.Customer.id || $json.body.customer.id || 'TEST_123') }}",
+              "type": "string"
+            },
+            {
+              "id": "b968c50e-f26f-4fe5-8da4-0c5beaa7095k",
+              "name": "payloadCompleto",
+              "value": "={{ JSON.stringify($json.body) }}",
+              "type": "string"
+            },
+            {
+              "id": "c968c50e-f26f-4fe5-8da4-0c5beaa7095l",
+              "name": "debugInfo",
+              "value": "={{ 'TESTE - Dados extraídos: ID=' + ($json.body.Customer?.id || $json.body.customer?.id || 'N/A') + ' | Email=' + ($json.body.Customer?.email || $json.body.customer?.email || 'N/A') + ' | Evento=' + ($json.body.event || $json.body.event_type || 'N/A') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        2304
+      ],
+      "id": "39727a93-915b-495e-bc01-482964b15bcc",
+      "name": "FiltraDadosKiwify"
+    },
+    {
+      "parameters": {
+        "resource": "chat-api",
+        "instanceName": "controlazap",
+        "numbers": "=55{{ $json.customerPhone }}"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        528,
+        2304
+      ],
+      "id": "31de79f4-95aa-4426-be09-c19f85d010e5",
+      "name": "VerificaNumeroWhatsKiwify",
+      "credentials": {
+        "evolutionApi": {
+          "id": "4GUU0R32mA2brhc2",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ivsqwjcfrktpslhmxwnx.supabase.co/functions/v1/user-registration-webhook",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "jsonBody": "={\n  \"email\": \"{{ $json.customerEmail }}\",\n  \"phone\": \"{{ $('VerificaNumeroWhatsKiwify').item.json.data[0]?.jid?.split('@')[0] || $json.customerPhone }}\",\n  \"name\": \"{{ $json.customerName }}\",\n  \"subscription_id\": \"{{ $json.subscriptionId }}\",\n  \"payment_provider\": \"kiwify\",\n  \"subscription_status\": \"active\",\n  \"plan_name\": \"ControlaZap Teste\",\n  \"amount\": 29.90,\n  \"currency\": \"BRL\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        752,
+        2304
+      ],
+      "id": "17591dd7-c8da-4215-a66a-becfc2954011",
+      "name": "CriaAtualizaUsuarioKiwify",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "controlazap",
+        "remoteJid": "={{ $('VerificaNumeroWhatsKiwify').item.json.data[0]?.jid || '55' + $json.customerPhone + '@s.whatsapp.net' }}",
+        "messageText": "=🧪 *TESTE - Parabéns, {{ $json.customerName.split(' ')[0] }}!*\n\n✅ Fluxo de integração Kiwify funcionando!\n\n📊 Debug Info: {{ $json.debugInfo }}\n\n📧 Email: {{ $json.customerEmail }}\n📱 Telefone: {{ $json.customerPhone }}\n🆔 Subscription: {{ $json.subscriptionId }}\n\n🚀 Integração ControlaZap - Modo Teste",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        976,
+        2224
+      ],
+      "id": "82a5f5de-470e-42b1-9712-c985e19b212b",
+      "name": "EnviaWhatsappKiwify",
+      "credentials": {
+        "evolutionApi": {
+          "id": "4GUU0R32mA2brhc2",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.customerEmail }}",
+        "subject": "🧪 TESTE - Integração Kiwify ControlaZap",
+        "message": "=<h2>🧪 TESTE - Integração Kiwify</h2>\n\n<p><strong>Dados recebidos e processados:</strong></p>\n<ul>\n<li><strong>Nome:</strong> {{ $json.customerName }}</li>\n<li><strong>Email:</strong> {{ $json.customerEmail }}</li>\n<li><strong>Telefone:</strong> {{ $json.customerPhone }}</li>\n<li><strong>ID Cliente:</strong> {{ $json.customerId }}</li>\n<li><strong>Subscription:</strong> {{ $json.subscriptionId }}</li>\n<li><strong>Evento:</strong> {{ $json.eventType }}</li>\n</ul>\n\n<p><strong>Payload Completo:</strong></p>\n<pre>{{ $json.payloadCompleto }}</pre>\n\n<p><strong>Debug Info:</strong> {{ $json.debugInfo }}</p>\n\n<p>✅ Fluxo completo executado com sucesso!</p>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        976,
+        2432
+      ],
+      "id": "ae6b1e81-3542-4592-a391-e7bd3cc5d69b",
+      "name": "EnviaEmailKiwify",
+      "webhookId": "e641ec5c-6b92-42ed-9ba3-3f33f8d9ec0f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "36PFJWPzrGiKMdZF",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 🧪 ControlaZap - Teste Integração Kiwify\n\n**VERSÃO DE TESTE - SEM FILTRO DE EVENTO**\n\n**Fluxo Simplificado:**\n1. 🎯 Recebe webhook da Kiwify\n2. 📋 Extrai dados (com fallbacks para teste)\n3. 📱 Verifica número do WhatsApp\n4. 👤 Cria/atualiza usuário via user-registration-webhook\n5. 💬 Envia confirmação via WhatsApp (com dados de debug)\n6. 📧 Envia email com payload completo\n\n**Características desta versão:**\n• ❌ SEM filtro de evento (processa qualquer payload)\n• 🔧 Valores padrão para teste caso dados estejam vazios\n• 📊 Logging detalhado do payload recebido\n• 🧪 Prefixo \"TESTE\" nas mensagens\n• 🔍 Debug info nos outputs\n\n**URL do Webhook:** /kiwify-webhook-teste\n\n⚠️ **Usar apenas para validar funcionamento do fluxo!**",
+        "height": 520,
+        "width": 1240,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        2080
+      ],
+      "id": "145e6ed9-60f3-49e7-9e19-674534cc17af",
+      "name": "Sticky Note Teste Kiwify"
+    }
+  ],
+  "connections": {
+    "WebhookKiwify": {
+      "main": [
+        [
+          {
+            "node": "FiltraDadosKiwify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FiltraDadosKiwify": {
+      "main": [
+        [
+          {
+            "node": "VerificaNumeroWhatsKiwify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VerificaNumeroWhatsKiwify": {
+      "main": [
+        [
+          {
+            "node": "CriaAtualizaUsuarioKiwify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CriaAtualizaUsuarioKiwify": {
+      "main": [
+        [
+          {
+            "node": "EnviaWhatsappKiwify",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "EnviaEmailKiwify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4cabe1a08d10bf2853a9001d10e6b6d9fb90d6c5a976d2031b9dc5b4149df03b"
+  }
+}
