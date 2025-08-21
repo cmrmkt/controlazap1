@@ -1,0 +1,292 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "kiwify-webhook",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        64,
+        2304
+      ],
+      "id": "462421da-8016-48e4-9e17-4e87ceb3f978",
+      "name": "WebhookKiwify",
+      "webhookId": "1a643f5c-49e7-41a6-b41c-5fd8f7093585"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8f748fe2-c181-4a81-8fe6-91cb462edc9f",
+              "name": "customerId",
+              "value": "={{ $json.body.Customer?.id || $json.body.customer_id }}",
+              "type": "string"
+            },
+            {
+              "id": "6968c50e-f26f-4fe5-8da4-0c5beaa7095f",
+              "name": "customerEmail",
+              "value": "={{ $json.body.Customer?.email || $json.body.customer_email }}",
+              "type": "string"
+            },
+            {
+              "id": "7968c50e-f26f-4fe5-8da4-0c5beaa7095g",
+              "name": "customerName",
+              "value": "={{ $json.body.Customer?.name || $json.body.customer_name }}",
+              "type": "string"
+            },
+            {
+              "id": "8968c50e-f26f-4fe5-8da4-0c5beaa7095h",
+              "name": "customerPhone",
+              "value": "={{ $json.body.Customer?.mobile || $json.body.customer_mobile }}",
+              "type": "string"
+            },
+            {
+              "id": "9968c50e-f26f-4fe5-8da4-0c5beaa7095i",
+              "name": "eventType",
+              "value": "={{ $json.body.event_type }}",
+              "type": "string"
+            },
+            {
+              "id": "a968c50e-f26f-4fe5-8da4-0c5beaa7095j",
+              "name": "subscriptionId",
+              "value": "={{ $json.body.subscription_id || $json.body.order_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        2304
+      ],
+      "id": "39727a93-915b-495e-bc01-482964b15bcc",
+      "name": "FiltraDadosKiwify"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "4d50f7a5-9326-4c2e-8856-4d64d98c2b54",
+              "leftValue": "={{ $json.eventType }}",
+              "rightValue": "compra_aprovada",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        528,
+        2304
+      ],
+      "id": "7c607a43-ad47-4f82-bb48-8bb46444b5c7",
+      "name": "FiltroEventoAprovado"
+    },
+    {
+      "parameters": {
+        "resource": "chat-api",
+        "instanceName": "controlazap",
+        "numbers": "=55{{ $json.customerPhone }}"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        752,
+        2304
+      ],
+      "id": "31de79f4-95aa-4426-be09-c19f85d010e5",
+      "name": "VerificaNumeroWhatsKiwify",
+      "credentials": {
+        "evolutionApi": {
+          "id": "4GUU0R32mA2brhc2",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ivsqwjcfrktpslhmxwnx.supabase.co/functions/v1/user-registration-webhook",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "jsonBody": "={\n  \"email\": \"{{ $json.customerEmail }}\",\n  \"phone\": \"{{ $('VerificaNumeroWhatsKiwify').item.json.data[0]?.jid?.split('@')[0] || $json.customerPhone }}\",\n  \"name\": \"{{ $json.customerName }}\",\n  \"subscription_id\": \"{{ $json.subscriptionId }}\",\n  \"payment_provider\": \"kiwify\",\n  \"subscription_status\": \"active\",\n  \"plan_name\": \"ControlaZap\",\n  \"amount\": 29.90,\n  \"currency\": \"BRL\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        976,
+        2304
+      ],
+      "id": "17591dd7-c8da-4215-a66a-becfc2954011",
+      "name": "CriaAtualizaUsuarioKiwify",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "controlazap",
+        "remoteJid": "={{ $('VerificaNumeroWhatsKiwify').item.json.data[0]?.jid || '55' + $json.customerPhone + '@s.whatsapp.net' }}",
+        "messageText": "=🎉 *Parabéns, {{ $json.customerName.split(' ')[0] }}!*\n\nSua compra foi confirmada com sucesso! ✅\n\nAgora você tem acesso completo ao *ControlaZap* - sua plataforma de controle financeiro inteligente.\n\n📧 Verifique seu email *{{ $json.customerEmail }}* para receber seus dados de acesso.\n\n💡 *Com o ControlaZap você pode:*\n• Controlar receitas e despesas automaticamente\n• Receber lembretes inteligentes\n• Conversar com nosso assistente financeiro\n• Gerar relatórios detalhados\n\nBem-vindo(a) à família ControlaZap! 🚀",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        2224
+      ],
+      "id": "82a5f5de-470e-42b1-9712-c985e19b212b",
+      "name": "EnviaWhatsappKiwify",
+      "credentials": {
+        "evolutionApi": {
+          "id": "4GUU0R32mA2brhc2",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.customerEmail }}",
+        "subject": "🎉 Bem-vindo ao ControlaZap - Sua conta está ativa!",
+        "message": "=<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f5f7fa\" style=\"font-family: Arial, sans-serif; padding: 40px 0;\">\n  <tr>\n    <td align=\"center\">\n      <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#ffffff\" style=\"border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);\">\n        <tr>\n          <td align=\"center\" style=\"padding: 30px 20px 10px;\">\n            <img src=\"https://ivsqwjcfrktpslhmxwnx.supabase.co/storage/v1/object/public/lovable-uploads/bfc868b7-f19d-433e-a42b-71c3135c5c0b.png\" alt=\"ControlaZap Logo\" width=\"180\" style=\"display: block;\" />\n          </td>\n        </tr>\n        <tr>\n          <td style=\"padding: 20px 30px; color: #333333;\">\n            <h1 style=\"font-size: 28px; margin: 0 0 20px; color: #2563eb; text-align: center;\">🎉 Parabéns, {{ $json.customerName }}!</h1>\n            \n            <p style=\"font-size: 16px; line-height: 1.6; margin: 0 0 20px; text-align: center;\">\n              Sua compra foi confirmada e sua conta no <strong>ControlaZap</strong> já está ativa!\n            </p>\n\n            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#e0f2fe\" style=\"border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #2563eb;\">\n              <tr>\n                <td style=\"font-size: 16px; line-height: 1.6;\">\n                  <h3 style=\"margin: 0 0 15px; color: #2563eb;\">🚀 O que você pode fazer agora:</h3>\n                  <ul style=\"margin: 0; padding-left: 20px;\">\n                    <li style=\"margin-bottom: 8px;\"><strong>💰 Controle Automático:</strong> Registre receitas e despesas facilmente</li>\n                    <li style=\"margin-bottom: 8px;\"><strong>🔔 Lembretes Inteligentes:</strong> Nunca esqueça uma conta importante</li>\n                    <li style=\"margin-bottom: 8px;\"><strong>🤖 Assistente IA:</strong> Tire dúvidas financeiras a qualquer hora</li>\n                    <li style=\"margin-bottom: 8px;\"><strong>📊 Relatórios Detalhados:</strong> Veja onde seu dinheiro está indo</li>\n                  </ul>\n                </td>\n              </tr>\n            </table>\n\n            <div style=\"text-align: center; margin: 30px 0;\">\n              <a href=\"https://controlazap.lovable.app/auth\" style=\"display: inline-block; background-color: #2563eb; color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-size: 16px; font-weight: bold;\">🔐 Acessar Minha Conta</a>\n            </div>\n\n            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f8f9fa\" style=\"border-radius: 6px; padding: 20px; margin: 25px 0;\">\n              <tr>\n                <td style=\"font-size: 15px; line-height: 1.6; text-align: center;\">\n                  <h4 style=\"margin: 0 0 10px; color: #333;\">📧 Seus dados de acesso:</h4>\n                  <p style=\"margin: 5px 0;\"><strong>Email:</strong> {{ $json.customerEmail }}</p>\n                  <p style=\"margin: 5px 0 15px;\"><strong>WhatsApp:</strong> {{ $json.customerPhone }}</p>\n                  <p style=\"font-size: 14px; color: #666; margin: 0;\">\n                    <em>💡 Use o \"Esqueci minha senha\" na tela de login para criar sua senha personalizada.</em>\n                  </p>\n                </td>\n              </tr>\n            </table>\n\n            <p style=\"font-size: 16px; line-height: 1.6; margin: 25px 0;\">\n              <strong>💬 Precisa de ajuda?</strong><br>\n              Nossa equipe está sempre pronta para ajudar! Entre em contato conosco pelo WhatsApp ou email.\n            </p>\n\n            <p style=\"font-size: 16px; line-height: 1.6; margin-top: 30px; text-align: center;\">\n              Bem-vindo(a) à família ControlaZap! 🚀<br>\n              <strong>Equipe ControlaZap</strong>\n            </p>\n          </td>\n        </tr>\n        <tr>\n          <td align=\"center\" style=\"font-size: 12px; color: #777777; padding: 20px; border-top: 1px solid #eee;\">\n            © {{$now.format('yyyy')}} ControlaZap. Todos os direitos reservados.<br>\n            <a href=\"https://controlazap.lovable.app\" style=\"color: #2563eb; text-decoration: none;\">controlazap.lovable.app</a>\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1200,
+        2432
+      ],
+      "id": "ae6b1e81-3542-4592-a391-e7bd3cc5d69b",
+      "name": "EnviaEmailKiwify",
+      "webhookId": "e641ec5c-6b92-42ed-9ba3-3f33f8d9ec0f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "36PFJWPzrGiKMdZF",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## ControlaZap - Integração Kiwify Otimizada\n\n**Fluxo do Webhook:**\n1. 🎯 Recebe webhook da Kiwify\n2. 📋 Extrai dados do cliente (email, nome, telefone)\n3. ✅ Filtra apenas eventos \"compra_aprovada\"\n4. 📱 Verifica número do WhatsApp\n5. 👤 Cria/atualiza usuário via user-registration-webhook\n6. 💬 Envia confirmação via WhatsApp\n7. 📧 Envia email de boas-vindas\n\n**Melhorias implementadas:**\n• Usa user-registration-webhook ao invés de auth direto\n• Filtro de eventos para processar apenas compras aprovadas\n• Template de email responsivo com logo ControlaZap\n• Tratamento robusto de dados da Kiwify\n• URLs atualizadas para o projeto atual",
+        "height": 480,
+        "width": 1240,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        2120
+      ],
+      "id": "145e6ed9-60f3-49e7-9e19-674534cc17af",
+      "name": "Sticky Note Kiwify Otimizado"
+    }
+  ],
+  "connections": {
+    "WebhookKiwify": {
+      "main": [
+        [
+          {
+            "node": "FiltraDadosKiwify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FiltraDadosKiwify": {
+      "main": [
+        [
+          {
+            "node": "FiltroEventoAprovado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FiltroEventoAprovado": {
+      "main": [
+        [
+          {
+            "node": "VerificaNumeroWhatsKiwify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VerificaNumeroWhatsKiwify": {
+      "main": [
+        [
+          {
+            "node": "CriaAtualizaUsuarioKiwify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CriaAtualizaUsuarioKiwify": {
+      "main": [
+        [
+          {
+            "node": "EnviaWhatsappKiwify",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "EnviaEmailKiwify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4cabe1a08d10bf2853a9001d10e6b6d9fb90d6c5a976d2031b9dc5b4149df03b"
+  }
+}
