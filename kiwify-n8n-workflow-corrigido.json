@@ -1,0 +1,301 @@
+{
+  "meta": {
+    "instanceId": "668284d797e6fcc24adb2cbd0638eec81d5b847eb15db25b7976028d1ad862f5"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "kiwify-webhook",
+        "options": {}
+      },
+      "id": "3c96db07-dc5f-4c3d-9e2a-8ca0d140a685",
+      "name": "WebhookKiwify",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [440, 240],
+      "webhookId": "kiwify-webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "889be5d7-a971-4088-b9bb-c0b0b4fd1861",
+              "name": "customer_id",
+              "value": "={{ $json.Customer?.id || $json.customer?.id }}",
+              "type": "string"
+            },
+            {
+              "id": "2c94f02a-b3a2-4b8f-a346-e8c9f3d4b5e6",
+              "name": "customer_email",
+              "value": "={{ $json.Customer?.email || $json.customer?.email }}",
+              "type": "string"
+            },
+            {
+              "id": "3d05c13b-c4a3-5c9f-b457-f4e0a5d6c7f8",
+              "name": "customer_name",
+              "value": "={{ $json.Customer?.name || $json.customer?.name }}",
+              "type": "string"
+            },
+            {
+              "id": "4e16d24c-d5b4-6d0f-c568-05f1b6e7d8f9",
+              "name": "customer_phone",
+              "value": "={{ $json.Customer?.mobile || $json.customer?.mobile || $json.Customer?.phone || $json.customer?.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "5f27e35d-e6c5-7e1f-d679-16026f8e90fa",
+              "name": "event_type",
+              "value": "={{ $json.event }}",
+              "type": "string"
+            },
+            {
+              "id": "6038f46e-f7d6-8f2f-e78a-27137090fb0b",
+              "name": "subscription_id",
+              "value": "={{ $json.order_id || $json.subscription_id || $json.Product?.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a2b3c4d5-e6f7-8901-2345-6789abcdef01",
+      "name": "FiltraDadosKiwify",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [660, 240]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "d1e2f3a4-b5c6-7890-1234-567890abcdef",
+              "leftValue": "={{ $json.event_type }}",
+              "rightValue": "compra_aprovada",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "b3c4d5e6-f7890123-4567-890abcdef012",
+      "name": "FiltroEventoAprovado",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [880, 240]
+    },
+    {
+      "parameters": {
+        "url": "=https://evolution.controlazap.com/instance/fetchInstances",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $json.customer_phone }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c4d5e6f7-8901-2345-6789-abcdef012345",
+      "name": "VerificaNumeroWhatsKiwify",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1100, 240],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "evolution-api-key",
+          "name": "Evolution API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://ivsqwjcfrktpslhmxwnx.supabase.co/functions/v1/user-registration-webhook",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"email\": \"{{ $json.customer_email }}\",\n  \"name\": \"{{ $json.customer_name }}\",\n  \"phone\": \"{{ $json.customer_phone }}\",\n  \"subscription_id\": \"{{ $json.subscription_id }}\",\n  \"provider\": \"kiwify\",\n  \"status\": \"active\"\n}",
+        "options": {}
+      },
+      "id": "d5e6f7890123-4567-890a-bcdef0123456",
+      "name": "CriaAtualizaUsuarioKiwify",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1320, 240],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://evolution.controlazap.com/message/sendText/controlazap",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"number\": \"{{ $json.customer_phone }}\",\n  \"text\": \"🎉 Olá {{ $('FiltraDadosKiwify').item.json.customer_name }}!\\n\\nSua compra foi aprovada com sucesso! ✅\\n\\n🔐 Seus dados de acesso:\\n📧 Email: {{ $('FiltraDadosKiwify').item.json.customer_email }}\\n\\nAcesse nossa plataforma e comece a usar agora mesmo!\\n\\n🚀 Bem-vindo(a) à nossa comunidade!\"\n}",
+        "options": {}
+      },
+      "id": "e6f7890123456789-0abc-def0123456789",
+      "name": "EnviaWhatsappKiwify",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1540, 140],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "evolution-api-key",
+          "name": "Evolution API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "user",
+        "user": {
+          "resource": "message",
+          "operation": "send",
+          "useThreadId": false,
+          "sendTo": "={{ $('FiltraDadosKiwify').item.json.customer_email }}",
+          "subject": "🎉 Bem-vindo! Sua compra foi aprovada",
+          "emailType": "html",
+          "message": "=<h2>🎉 Olá {{ $('FiltraDadosKiwify').item.json.customer_name }}!</h2>\n\n<p>Sua compra foi <strong>aprovada com sucesso</strong>! ✅</p>\n\n<h3>🔐 Seus dados de acesso:</h3>\n<ul>\n  <li><strong>📧 Email:</strong> {{ $('FiltraDadosKiwify').item.json.customer_email }}</li>\n</ul>\n\n<p>🚀 Acesse nossa plataforma e comece a usar agora mesmo!</p>\n\n<p>Bem-vindo(a) à nossa comunidade!</p>\n\n<hr>\n<p><em>Este é um email automático. Se você tiver dúvidas, entre em contato conosco.</em></p>",
+          "options": {}
+        }
+      },
+      "id": "f7890123456789ab-cdef-0123456789ab",
+      "name": "EnviaEmailKiwify",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1540, 340],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gmail-oauth",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 🔄 Workflow Kiwify Corrigido\n\n### ✅ Correções Implementadas:\n1. **Substituído CriaContaKiwify** por user-registration-webhook\n2. **Corrigido referências de user_id** \n3. **Adicionado filtro de evento** (compra_aprovada)\n4. **Simplificado fluxo** para evitar erros\n5. **Melhorado tratamento de dados**\n\n### 🎯 Fluxo:\nWebhook → Filtrar Dados → Verificar Evento → WhatsApp → Criar Usuário → Notificações\n\n### ⚙️ Configurações Necessárias:\n- Evolution API Key\n- Supabase Service Key  \n- Gmail OAuth2\n- Webhook URL no Kiwify",
+        "height": 464,
+        "width": 508,
+        "color": 4
+      },
+      "id": "890123456789abcd-ef01-23456789abcd",
+      "name": "Sticky Note Kiwify Corrigido",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [200, 40]
+    }
+  ],
+  "connections": {
+    "WebhookKiwify": {
+      "main": [
+        [
+          {
+            "node": "FiltraDadosKiwify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FiltraDadosKiwify": {
+      "main": [
+        [
+          {
+            "node": "FiltroEventoAprovado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FiltroEventoAprovado": {
+      "main": [
+        [
+          {
+            "node": "VerificaNumeroWhatsKiwify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VerificaNumeroWhatsKiwify": {
+      "main": [
+        [
+          {
+            "node": "CriaAtualizaUsuarioKiwify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CriaAtualizaUsuarioKiwify": {
+      "main": [
+        [
+          {
+            "node": "EnviaWhatsappKiwify",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "EnviaEmailKiwify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {}
+}
