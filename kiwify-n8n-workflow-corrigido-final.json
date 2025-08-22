@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4cabe1a08d10bf2853a9001d10e6b6d9fb90d6c5a976d2031b9dc5b4149df03b"
+  },
   "nodes": [
     {
       "parameters": {
@@ -6,14 +10,14 @@
         "path": "confirma-kiwify",
         "options": {}
       },
+      "id": "84f3cfdd-e280-45aa-9898-b921ebbce756",
+      "name": "ConfirmaKiwify",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
         144,
         2752
       ],
-      "id": "84f3cfdd-e280-45aa-9898-b921ebbce756",
-      "name": "ConfirmaKiwify",
       "webhookId": "SUA_URL_WEBHOOK_KIWIFY_ID"
     },
     {
@@ -66,14 +70,14 @@
         },
         "options": {}
       },
+      "id": "e5a227b1-a935-48b6-ac48-91d6bbd7aeeb",
+      "name": "FiltraDadosKiwify",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
         384,
         2752
-      ],
-      "id": "e5a227b1-a935-48b6-ac48-91d6bbd7aeeb",
-      "name": "FiltraDadosKiwify"
+      ]
     },
     {
       "parameters": {
@@ -123,20 +127,20 @@
             },
             {
               "name": "metadata",
-              "value": "={{ JSON.stringify({\n  plan_id: $('FiltraDadosKiwify').item.json.planId,\n  event_type: $('FiltraDadosKiwify').item.json.eventType\n}) }}"
+              "value": "={{ JSON.stringify({ plan_id: $('FiltraDadosKiwify').item.json.planId, event_type: $('FiltraDadosKiwify').item.json.eventType }) }}"
             }
           ]
         },
         "options": {}
       },
+      "id": "aa208c8a-0cb5-472f-b629-63395d22720f",
+      "name": "CriaUsuarioCompleto",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         640,
         2752
       ],
-      "id": "aa208c8a-0cb5-472f-b629-63395d22720f",
-      "name": "CriaUsuarioCompleto",
       "credentials": {
         "httpBearerAuth": {
           "id": "WITTXY02kRBr67S8",
@@ -153,14 +157,14 @@
           "appendAttribution": false
         }
       },
+      "id": "60c3aa36-39ac-44d5-924f-2b4b0217dced",
+      "name": "EnviaEmail",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
         896,
         2880
       ],
-      "id": "60c3aa36-39ac-44d5-924f-2b4b0217dced",
-      "name": "EnviaEmail",
       "webhookId": "e641ec5c-6b92-42ed-9ba3-3f33f8d9ec0f",
       "credentials": {
         "gmailOAuth2": {
@@ -177,14 +181,14 @@
         "messageText": "=🎉 Parabéns {{ $json.user.name.split(' ')[0] }}!\n\nSua conta ControlaZap foi criada com sucesso! \n\n📧 Confira sua caixa de entrada do email {{ $json.user.email }} para mais detalhes.\n\n🔗 Acesse agora: https://controlazap.site\n\n💰 Comece já a organizar suas finanças de forma inteligente!",
         "options_message": {}
       },
+      "id": "7368a7e8-80fc-488f-a2c1-82aea75cd70a",
+      "name": "EnviaWhatsapp",
       "type": "n8n-nodes-evolution-api.evolutionApi",
       "typeVersion": 1,
       "position": [
         896,
         2672
       ],
-      "id": "7368a7e8-80fc-488f-a2c1-82aea75cd70a",
-      "name": "EnviaWhatsapp",
       "credentials": {
         "evolutionApi": {
           "id": "4GUU0R32mA2brhc2",
@@ -234,8 +238,12 @@
     }
   },
   "pinData": {},
-  "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "4cabe1a08d10bf2853a9001d10e6b6d9fb90d6c5a976d2031b9dc5b4149df03b"
-  }
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-01-20T12:00:00.000Z",
+  "versionId": "1"
 }
