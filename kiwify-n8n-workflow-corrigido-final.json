@@ -172,7 +172,7 @@
           "parameters": [
             {
               "name": "id",
-              "value": "=eq.{{ $('CriaUsuarioCompleto').item.json.user_id }}"
+              "value": "=eq.{{ $('CriaUsuarioCompleto').item.json.user.id }}"
             }
           ]
         },
