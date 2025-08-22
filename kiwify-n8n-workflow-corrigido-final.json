@@ -1,0 +1,241 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "confirma-kiwify",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        144,
+        2752
+      ],
+      "id": "84f3cfdd-e280-45aa-9898-b921ebbce756",
+      "name": "ConfirmaKiwify",
+      "webhookId": "SUA_URL_WEBHOOK_KIWIFY_ID"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e0e3160b-8d5f-4d43-90d2-8f9f09d81d5f",
+              "name": "customerEmail",
+              "value": "={{ $json.body.Customer.email }}",
+              "type": "string"
+            },
+            {
+              "id": "c618e77a-2410-444a-9f5b-513c01f6044e",
+              "name": "customerName",
+              "value": "={{ $json.body.Customer.full_name }}",
+              "type": "string"
+            },
+            {
+              "id": "270d4944-9351-46f0-91b6-76472d733190",
+              "name": "mobilePhone",
+              "value": "={{ $json.body.Customer.mobile.replace(/[^0-9]/g, '').replace(/^55/, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "8f748fe2-c181-4a81-8fe6-91cb462edc9f",
+              "name": "customerId",
+              "value": "={{ $json.body.Customer.CPF || $json.body.Customer.email }}",
+              "type": "string"
+            },
+            {
+              "id": "a968c50e-f26f-4fe5-8da4-0c5beaa7095j",
+              "name": "subscriptionId",
+              "value": "={{ $json.body.subscription_id }}",
+              "type": "string"
+            },
+            {
+              "id": "d968c50e-f26f-4fe5-8da4-0c5beaa7095m",
+              "name": "eventType",
+              "value": "={{ $json.body.webhook_event_type }}",
+              "type": "string"
+            },
+            {
+              "id": "b968c50e-f26f-4fe5-8da4-0c5beaa7095k",
+              "name": "planId",
+              "value": "={{ $json.body.Subscription.plan.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        2752
+      ],
+      "id": "e5a227b1-a935-48b6-ac48-91d6bbd7aeeb",
+      "name": "FiltraDadosKiwify"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ivsqwjcfrktpslhmxwnx.supabase.co/functions/v1/user-registration-webhook",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "={{ $json.customerEmail }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ $json.mobilePhone }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $json.customerName }}"
+            },
+            {
+              "name": "subscription_id",
+              "value": "={{ $json.subscriptionId }}"
+            },
+            {
+              "name": "customer_id",
+              "value": "={{ $json.customerId }}"
+            },
+            {
+              "name": "plan_id",
+              "value": "={{ $json.planId }}"
+            },
+            {
+              "name": "event_type",
+              "value": "={{ $json.eventType }}"
+            },
+            {
+              "name": "provider",
+              "value": "kiwify"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        640,
+        2752
+      ],
+      "id": "aa208c8a-0cb5-472f-b629-63395d22720f",
+      "name": "CriaUsuarioCompleto",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "WITTXY02kRBr67S8",
+          "name": "Token supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.user.email }}",
+        "subject": "Conta Criada com Sucesso - ControlaZap!",
+        "message": "=<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f5f7fa\" style=\"font-family: Arial, sans-serif; padding: 40px 0;\">\n  <tr>\n    <td align=\"center\">\n      <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#ffffff\" style=\"border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);\">\n        <tr>\n\t<td align=\"center\" style=\"padding: 30px 20px 10px;\">\n  \t\t<img src=\"https://ivsqwjcfrktpslhmxwnx.supabase.co/storage/v1/object/public/lovable-uploads/bfc868b7-f19d-433e-a42b-71c3135c5c0b.png\" alt=\"ControlaZap Logo\" width=\"180\" style=\"display: block;\" />\n\t</td>\n        </tr>\n        <tr>\n          <td style=\"padding: 20px 30px; color: #333333;\">\n            <h1 style=\"font-size: 24px; margin: 0 0 15px;\">🎉 Bem-vindo(a), {{ $json.user.name }}!</h1>\n            <p style=\"font-size: 16px; line-height: 1.6; margin: 0 0 15px;\">\n              Estamos felizes em ter você com a gente! A partir de agora, você conta com uma plataforma completa para organizar suas finanças de forma prática e inteligente.\n            </p>\n\n            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f0f8ff\" style=\"border-radius: 6px; padding: 15px; margin: 20px 0;\">\n              <tr>\n                <td style=\"font-size: 16px; line-height: 1.6;\">\n                  <strong>💼 Com o seu plano ControlaZap, você poderá:</strong><br/>\n                  ✅ Registrar receitas e despesas automaticamente<br/>\n                  ✅ Receber lembretes de contas e metas<br/>\n                  ✅ Contar com um assistente financeiro sempre disponível\n                </td>\n              </tr>\n            </table>\n\n            <p style=\"font-size: 16px; line-height: 1.6; margin: 25px 0 10px;\">\n              🔐 <strong>Dados de Acesso:</strong>\n            </p>\n            <p style=\"font-size: 16px; background-color: #f8f8f8; padding: 12px 20px; border-radius: 6px; border: 1px solid #ddd;\">\n              <strong>Email:</strong> {{ $json.user.email }}<br/>\n              <strong>Link de Acesso:</strong> <a href=\"https://controlazap.site/auth\">controlazap.site</a>\n            </p>\n\n            <p style=\"font-size: 14px; color: #007acc; margin: 10px 0 20px;\">\n              💡 Você pode acessar a plataforma usando sua conta do Google ou criar uma senha personalizada.\n            </p>\n\n            <p style=\"font-size: 16px; line-height: 1.6;\">\n              Se precisar de ajuda, estamos por aqui para o que for necessário.\n            </p>\n\n            <p style=\"font-size: 16px; line-height: 1.6; margin-top: 30px;\">\n              Forte abraço,<br/>\n              <strong>Equipe ControlaZap</strong>\n            </p>\n          </td>\n        </tr>\n        <tr>\n          <td align=\"center\" style=\"font-size: 14px; color: #777777; padding: 20px;\">\n            © {{$now.format('yyyy')}} ControlaZap. Todos os direitos reservados.\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        896,
+        2880
+      ],
+      "id": "60c3aa36-39ac-44d5-924f-2b4b0217dced",
+      "name": "EnviaEmail",
+      "webhookId": "e641ec5c-6b92-42ed-9ba3-3f33f8d9ec0f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "36PFJWPzrGiKMdZF",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "controlazap",
+        "remoteJid": "=55{{ $json.user.phone }}@s.whatsapp.net",
+        "messageText": "=🎉 Parabéns {{ $json.user.name.split(' ')[0] }}!\n\nSua conta ControlaZap foi criada com sucesso! \n\n📧 Confira sua caixa de entrada do email {{ $json.user.email }} para mais detalhes.\n\n🔗 Acesse agora: https://controlazap.site\n\n💰 Comece já a organizar suas finanças de forma inteligente!",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        896,
+        2672
+      ],
+      "id": "7368a7e8-80fc-488f-a2c1-82aea75cd70a",
+      "name": "EnviaWhatsapp",
+      "credentials": {
+        "evolutionApi": {
+          "id": "4GUU0R32mA2brhc2",
+          "name": "Evolution account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "ConfirmaKiwify": {
+      "main": [
+        [
+          {
+            "node": "FiltraDadosKiwify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FiltraDadosKiwify": {
+      "main": [
+        [
+          {
+            "node": "CriaUsuarioCompleto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CriaUsuarioCompleto": {
+      "main": [
+        [
+          {
+            "node": "EnviaWhatsapp",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "EnviaEmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4cabe1a08d10bf2853a9001d10e6b6d9fb90d6c5a976d2031b9dc5b4149df03b"
+  }
+}
