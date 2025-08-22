@@ -81,6 +81,19 @@
     },
     {
       "parameters": {
+        "jsCode": "// Gera uma senha aleatória de 8 dígitos\nconst password = Math.random().toString().slice(-8);\n\nreturn {\n  password: password,\n  // Mantém todos os dados do nó anterior\n  ...items[0].json\n};"
+      },
+      "id": "b9a45c8f-1234-5678-9abc-def012345678",
+      "name": "GeraSenhaAleatoria",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        2752
+      ]
+    },
+    {
+      "parameters": {
         "method": "POST",
         "url": "https://ivsqwjcfrktpslhmxwnx.supabase.co/functions/v1/user-registration-webhook",
         "authentication": "genericCredentialType",
@@ -127,7 +140,7 @@
             },
             {
               "name": "metadata",
-              "value": "={{ JSON.stringify({ plan_id: $('FiltraDadosKiwify').item.json.planId, event_type: $('FiltraDadosKiwify').item.json.eventType }) }}"
+              "value": "={{ JSON.stringify({ plan_id: $('FiltraDadosKiwify').item.json.planId, event_type: $('FiltraDadosKiwify').item.json.eventType, generated_password: $('GeraSenhaAleatoria').item.json.password }) }}"
             }
           ]
         },
@@ -138,7 +151,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        640,
+        864,
         2752
       ],
       "credentials": {
@@ -150,9 +163,75 @@
     },
     {
       "parameters": {
-        "sendTo": "={{ $json.user.email }}",
+        "method": "PATCH",
+        "url": "https://ivsqwjcfrktpslhmxwnx.supabase.co/rest/v1/profiles",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "=eq.{{ $('CriaUsuarioCompleto').item.json.user_id }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "customerid",
+              "value": "={{ $('FiltraDadosKiwify').item.json.customerId }}"
+            },
+            {
+              "name": "assinaturaid",
+              "value": "={{ $('FiltraDadosKiwify').item.json.subscriptionId }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ $('FiltraDadosKiwify').item.json.mobilePhone }}"
+            },
+            {
+              "name": "whatsapp",
+              "value": "={{ $('FiltraDadosKiwify').item.json.mobilePhone }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cc408c8a-1cb5-472f-c629-73395d22720g",
+      "name": "AtualizaInfoUser4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1104,
+        2752
+      ],
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "WITTXY02kRBr67S8",
+          "name": "Token supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('CriaUsuarioCompleto').item.json.user.email }}",
         "subject": "Conta Criada com Sucesso - ControlaZap!",
-        "message": "=<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f5f7fa\" style=\"font-family: Arial, sans-serif; padding: 40px 0;\">\n  <tr>\n    <td align=\"center\">\n      <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#ffffff\" style=\"border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);\">\n        <tr>\n\t<td align=\"center\" style=\"padding: 30px 20px 10px;\">\n  \t\t<img src=\"https://ivsqwjcfrktpslhmxwnx.supabase.co/storage/v1/object/public/lovable-uploads/bfc868b7-f19d-433e-a42b-71c3135c5c0b.png\" alt=\"ControlaZap Logo\" width=\"180\" style=\"display: block;\" />\n\t</td>\n        </tr>\n        <tr>\n          <td style=\"padding: 20px 30px; color: #333333;\">\n            <h1 style=\"font-size: 24px; margin: 0 0 15px;\">🎉 Bem-vindo(a), {{ $json.user.name }}!</h1>\n            <p style=\"font-size: 16px; line-height: 1.6; margin: 0 0 15px;\">\n              Estamos felizes em ter você com a gente! A partir de agora, você conta com uma plataforma completa para organizar suas finanças de forma prática e inteligente.\n            </p>\n\n            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f0f8ff\" style=\"border-radius: 6px; padding: 15px; margin: 20px 0;\">\n              <tr>\n                <td style=\"font-size: 16px; line-height: 1.6;\">\n                  <strong>💼 Com o seu plano ControlaZap, você poderá:</strong><br/>\n                  ✅ Registrar receitas e despesas automaticamente<br/>\n                  ✅ Receber lembretes de contas e metas<br/>\n                  ✅ Contar com um assistente financeiro sempre disponível\n                </td>\n              </tr>\n            </table>\n\n            <p style=\"font-size: 16px; line-height: 1.6; margin: 25px 0 10px;\">\n              🔐 <strong>Dados de Acesso:</strong>\n            </p>\n            <p style=\"font-size: 16px; background-color: #f8f8f8; padding: 12px 20px; border-radius: 6px; border: 1px solid #ddd;\">\n              <strong>Email:</strong> {{ $json.user.email }}<br/>\n              <strong>Link de Acesso:</strong> <a href=\"https://controlazap.site/auth\">controlazap.site</a>\n            </p>\n\n            <p style=\"font-size: 14px; color: #007acc; margin: 10px 0 20px;\">\n              💡 Você pode acessar a plataforma usando sua conta do Google ou criar uma senha personalizada.\n            </p>\n\n            <p style=\"font-size: 16px; line-height: 1.6;\">\n              Se precisar de ajuda, estamos por aqui para o que for necessário.\n            </p>\n\n            <p style=\"font-size: 16px; line-height: 1.6; margin-top: 30px;\">\n              Forte abraço,<br/>\n              <strong>Equipe ControlaZap</strong>\n            </p>\n          </td>\n        </tr>\n        <tr>\n          <td align=\"center\" style=\"font-size: 14px; color: #777777; padding: 20px;\">\n            © {{$now.format('yyyy')}} ControlaZap. Todos os direitos reservados.\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>",
+        "message": "=<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f5f7fa\" style=\"font-family: Arial, sans-serif; padding: 40px 0;\">\n  <tr>\n    <td align=\"center\">\n      <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#ffffff\" style=\"border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);\">\n        <tr>\n\t<td align=\"center\" style=\"padding: 30px 20px 10px;\">\n  \t\t<img src=\"https://ivsqwjcfrktpslhmxwnx.supabase.co/storage/v1/object/public/lovable-uploads/bfc868b7-f19d-433e-a42b-71c3135c5c0b.png\" alt=\"ControlaZap Logo\" width=\"180\" style=\"display: block;\" />\n\t</td>\n        </tr>\n        <tr>\n          <td style=\"padding: 20px 30px; color: #333333;\">\n            <h1 style=\"font-size: 24px; margin: 0 0 15px;\">🎉 Bem-vindo(a), {{ $('CriaUsuarioCompleto').item.json.user.name }}!</h1>\n            <p style=\"font-size: 16px; line-height: 1.6; margin: 0 0 15px;\">\n              Estamos felizes em ter você com a gente! A partir de agora, você conta com uma plataforma completa para organizar suas finanças de forma prática e inteligente.\n            </p>\n\n            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f0f8ff\" style=\"border-radius: 6px; padding: 15px; margin: 20px 0;\">\n              <tr>\n                <td style=\"font-size: 16px; line-height: 1.6;\">\n                  <strong>💼 Com o seu plano ControlaZap, você poderá:</strong><br/>\n                  ✅ Registrar receitas e despesas automaticamente<br/>\n                  ✅ Receber lembretes de contas e metas<br/>\n                  ✅ Contar com um assistente financeiro sempre disponível\n                </td>\n              </tr>\n            </table>\n\n            <p style=\"font-size: 16px; line-height: 1.6; margin: 25px 0 10px;\">\n              🔐 <strong>Dados de Acesso:</strong>\n            </p>\n            <p style=\"font-size: 16px; background-color: #f8f8f8; padding: 12px 20px; border-radius: 6px; border: 1px solid #ddd;\">\n              <strong>Email:</strong> {{ $('CriaUsuarioCompleto').item.json.user.email }}<br/>\n              <strong>Link de Acesso:</strong> <a href=\"https://controlazap.site/auth\">controlazap.site</a>\n            </p>\n\n            <p style=\"font-size: 14px; color: #007acc; margin: 10px 0 20px;\">\n              💡 Você pode acessar a plataforma usando sua conta do Google ou criar uma senha personalizada.\n            </p>\n\n            <p style=\"font-size: 16px; line-height: 1.6;\">\n              Se precisar de ajuda, estamos por aqui para o que for necessário.\n            </p>\n\n            <p style=\"font-size: 16px; line-height: 1.6; margin-top: 30px;\">\n              Forte abraço,<br/>\n              <strong>Equipe ControlaZap</strong>\n            </p>\n          </td>\n        </tr>\n        <tr>\n          <td align=\"center\" style=\"font-size: 14px; color: #777777; padding: 20px;\">\n            © {{$now.format('yyyy')}} ControlaZap. Todos os direitos reservados.\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>",
         "options": {
           "appendAttribution": false
         }
@@ -162,7 +241,7 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        896,
+        1344,
         2880
       ],
       "webhookId": "e641ec5c-6b92-42ed-9ba3-3f33f8d9ec0f",
@@ -177,8 +256,8 @@
       "parameters": {
         "resource": "messages-api",
         "instanceName": "controlazap",
-        "remoteJid": "=55{{ $json.user.phone }}@s.whatsapp.net",
-        "messageText": "=🎉 Parabéns {{ $json.user.name.split(' ')[0] }}!\n\nSua conta ControlaZap foi criada com sucesso! \n\n📧 Confira sua caixa de entrada do email {{ $json.user.email }} para mais detalhes.\n\n🔗 Acesse agora: https://controlazap.site\n\n💰 Comece já a organizar suas finanças de forma inteligente!",
+        "remoteJid": "=55{{ $('CriaUsuarioCompleto').item.json.user.phone }}@s.whatsapp.net",
+        "messageText": "=🎉 Parabéns {{ $('CriaUsuarioCompleto').item.json.user.name.split(' ')[0] }}!\n\nSua conta ControlaZap foi criada com sucesso! \n\n📧 Confira sua caixa de entrada do email {{ $('CriaUsuarioCompleto').item.json.user.email }} para mais detalhes.\n\n🔗 Acesse agora: https://controlazap.site\n\n💰 Comece já a organizar suas finanças de forma inteligente!",
         "options_message": {}
       },
       "id": "7368a7e8-80fc-488f-a2c1-82aea75cd70a",
@@ -186,7 +265,7 @@
       "type": "n8n-nodes-evolution-api.evolutionApi",
       "typeVersion": 1,
       "position": [
-        896,
+        1344,
         2672
       ],
       "credentials": {
@@ -213,6 +292,17 @@
       "main": [
         [
           {
+            "node": "GeraSenhaAleatoria",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GeraSenhaAleatoria": {
+      "main": [
+        [
+          {
             "node": "CriaUsuarioCompleto",
             "type": "main",
             "index": 0
@@ -221,6 +311,17 @@
       ]
     },
     "CriaUsuarioCompleto": {
+      "main": [
+        [
+          {
+            "node": "AtualizaInfoUser4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AtualizaInfoUser4": {
       "main": [
         [
           {
