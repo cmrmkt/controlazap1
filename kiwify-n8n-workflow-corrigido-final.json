@@ -95,35 +95,35 @@
           "parameters": [
             {
               "name": "email",
-              "value": "={{ $json.customerEmail }}"
+              "value": "={{ $('FiltraDadosKiwify').item.json.customerEmail }}"
             },
             {
               "name": "phone",
-              "value": "={{ $json.mobilePhone }}"
+              "value": "={{ $('FiltraDadosKiwify').item.json.mobilePhone }}"
             },
             {
               "name": "name",
-              "value": "={{ $json.customerName }}"
+              "value": "={{ $('FiltraDadosKiwify').item.json.customerName }}"
+            },
+            {
+              "name": "contact_type",
+              "value": "email"
             },
             {
               "name": "subscription_id",
-              "value": "={{ $json.subscriptionId }}"
+              "value": "={{ $('FiltraDadosKiwify').item.json.subscriptionId }}"
             },
             {
               "name": "customer_id",
-              "value": "={{ $json.customerId }}"
+              "value": "={{ $('FiltraDadosKiwify').item.json.customerId }}"
             },
             {
-              "name": "plan_id",
-              "value": "={{ $json.planId }}"
-            },
-            {
-              "name": "event_type",
-              "value": "={{ $json.eventType }}"
-            },
-            {
-              "name": "provider",
+              "name": "payment_provider",
               "value": "kiwify"
+            },
+            {
+              "name": "metadata",
+              "value": "={{ JSON.stringify({\n  plan_id: $('FiltraDadosKiwify').item.json.planId,\n  event_type: $('FiltraDadosKiwify').item.json.eventType\n}) }}"
             }
           ]
         },
