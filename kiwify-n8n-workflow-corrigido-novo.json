@@ -1,0 +1,449 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "confirma-kiwify",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        48,
+        2720
+      ],
+      "id": "a15cbdca-34bb-4e15-8618-2f117e9df18a",
+      "name": "ConfirmaKiwify1",
+      "webhookId": "cd7a21c7-3b97-48e1-b877-7b205c5bf859"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e0e3160b-8d5f-4d43-90d2-8f9f09d81d5f",
+              "name": "customerEmail",
+              "value": "={{ $json.body.Customer.email }}",
+              "type": "string"
+            },
+            {
+              "id": "c618e77a-2410-444a-9f5b-513c01f6044e",
+              "name": "customerName",
+              "value": "={{ $json.body.Customer.full_name }}",
+              "type": "string"
+            },
+            {
+              "id": "270d4944-9351-46f0-91b6-76472d733190",
+              "name": "mobilePhone",
+              "value": "={{ $json.body.Customer.mobile.replace(/[^0-9]/g, '').replace(/^55/, '') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        288,
+        2720
+      ],
+      "id": "dad31b7e-1956-4807-943f-a3b6c8122eff",
+      "name": "FiltraDadosKiwify1"
+    },
+    {
+      "parameters": {
+        "jsCode": "function gerarSenha() {\n    const chars = '0123456789';\n    let senha = '';\n    \n    for (let i = 0; i < 8; i++) {\n        const indice = Math.floor(Math.random() * chars.length);\n        senha += chars[indice];\n    }\n    \n    return senha;\n}\n\nreturn {\n  senhaAleatoria: gerarSenha()\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        544,
+        2720
+      ],
+      "id": "a1affa85-e647-4eb3-833c-c8bc2767e8c5",
+      "name": "GeraSenhaAleatoria2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ivsqwjcfrktpslhmxwnx.supabase.co/auth/v1/signup",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml2c3F3amNmcmt0cHNsaG14d254Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDc0ODE2NywiZXhwIjoyMDcwMzI0MTY3fQ.k8-_1jW5F5M6fJa-RjFJnQwN7wMoHkG6yYcl3EV8Sew"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "={{ $('FiltraDadosKiwify1').item.json.customerEmail }}"
+            },
+            {
+              "name": "password",
+              "value": "={{ $('GeraSenhaAleatoria2').item.json.senhaAleatoria }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        2720
+      ],
+      "id": "6a0699ad-5ab2-4b48-a571-a16fd77260cb",
+      "name": "CriaConta2",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "qBGwNzx3aECRUh1z",
+          "name": "Kiwify-Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "profiles",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $json.user.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "nome",
+              "fieldValue": "={{ $('FiltraDadosKiwify1').item.json.customerName }}"
+            },
+            {
+              "fieldId": "phone",
+              "fieldValue": "={{ $('FiltraDadosKiwify1').item.json.mobilePhone }}"
+            },
+            {
+              "fieldId": "whatsapp",
+              "fieldValue": "={{ $('FiltraDadosKiwify1').item.json.mobilePhone }}"
+            },
+            {
+              "fieldId": "customerid",
+              "fieldValue": "={{ $('ConfirmaKiwify1').item.json.body.Customer.CPF }}"
+            },
+            {
+              "fieldId": "assinaturaid",
+              "fieldValue": "={{ $('ConfirmaKiwify1').item.json.body.subscription_id }}"
+            },
+            {
+              "fieldId": "ativo",
+              "fieldValue": "true"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1024,
+        2720
+      ],
+      "id": "53579722-ac36-452c-a2bd-a265981593a7",
+      "name": "AtualizaInfoUser3",
+      "credentials": {
+        "supabaseApi": {
+          "id": "abyrtUzwj4gv8IT9",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('FiltraDadosKiwify1').item.json.customerEmail }}",
+        "subject": "Conta Criada com Sucesso!",
+        "message": "=<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f5f7fa\" style=\"font-family: Arial, sans-serif; padding: 40px 0;\">\n  <tr>\n    <td align=\"center\">\n      <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#ffffff\" style=\"border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);\">\n        <tr>\n\n\t<td align=\"center\" style=\"padding: 30px 20px 10px;\">\n  \t\t<img src=\"https://ivsqwjcfrktpslhmxwnx.supabase.co/storage/v1/object/public/lovable-uploads/bfc868b7-f19d-433e-a42b-71c3135c5c0b.png\" alt=\"ControlaZap \t\tLogo\" width=\"180\" style=\"display: block;\" />\n\t</td>\n        </tr>\n        <tr>\n          <td style=\"padding: 20px 30px; color: #333333;\">\n            <h1 style=\"font-size: 24px; margin: 0 0 15px;\">🎉 Bem-vindo(a), {{ $('FiltraDadosKiwify1').item.json.customerName }}!</h1>\n            <p style=\"font-size: 16px; line-height: 1.6; margin: 0 0 15px;\">\n              Estamos felizes em ter você com a gente! A partir de agora, você conta com uma plataforma completa para organizar suas finanças de forma prática e inteligente.\n            </p>\n\n            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f0f8ff\" style=\"border-radius: 6px; padding: 15px; margin: 20px 0;\">\n              <tr>\n                <td style=\"font-size: 16px; line-height: 1.6;\">\n                  <strong>💼 Com o seu plano ControlaZap, você poderá:</strong><br/>\n                  ✅ Registrar receitas e despesas automaticamente<br/>\n                  ✅ Receber lembretes de contas e metas<br/>\n                  ✅ Contar com um assistente financeiro sempre disponível\n                </td>\n              </tr>\n            </table>\n\n            <p style=\"font-size: 16px; line-height: 1.6; margin: 25px 0 10px;\">\n              🔐 <strong>Dados de Acesso:</strong>\n            </p>\n            <p style=\"font-size: 16px; background-color: #f8f8f8; padding: 12px 20px; border-radius: 6px; border: 1px solid #ddd;\">\n              <strong>Email:</strong> {{ $('FiltraDadosKiwify1').item.json.customerEmail }}<br/>\n              <strong>Senha:</strong> {{ $('GeraSenhaAleatoria2').item.json.senhaAleatoria }}\n            </p>\n\n            <p style=\"font-size: 14px; color: #cc0000; margin: 10px 0 20px;\">\n              ⚠️ Por segurança, recomendamos que você altere sua senha assim que acessar a plataforma pela primeira vez.\n            </p>\n\n            <p style=\"font-size: 16px; line-height: 1.6;\">\n              Se precisar de ajuda, estamos por aqui para o que for necessário.\n            </p>\n\n            <p style=\"font-size: 16px; line-height: 1.6; margin-top: 30px;\">\n              Forte abraço,<br/>\n              <strong>Equipe ControlaZap</strong>\n            </p>\n          </td>\n        </tr>\n        <tr>\n          <td align=\"center\" style=\"font-size: 14px; color: #777777; padding: 20px;\">\n            © {{$now.format('yyyy')}} ControlaZap. Todos os direitos reservados.\n          </td>\n        </tr>\n      </table>\n    </td>\n  </tr>\n</table>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1264,
+        2848
+      ],
+      "id": "5792019f-a6ae-4107-9507-23ea6e80c986",
+      "name": "EnviaEmail",
+      "webhookId": "cc70ddf4-b711-4a67-87eb-fa136550e439",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "36PFJWPzrGiKMdZF",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "controlazap",
+        "remoteJid": "=55{{ $('FiltraDadosKiwify1').item.json.mobilePhone }}@s.whatsapp.net",
+        "messageText": "={{ $('FiltraDadosKiwify1').item.json.customerName.split(' ')[0] }} Parabéns! 🎉\nSua conta foi criada com sucesso. Agora confira a caixa de entrada do e-mail {{ $('FiltraDadosKiwify1').item.json.customerEmail }} e verifique sua senha de acesso.",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1264,
+        2640
+      ],
+      "id": "13e01157-4f43-4599-b9b9-7ca1327cb57e",
+      "name": "EnviaWhatsapp",
+      "credentials": {
+        "evolutionApi": {
+          "id": "4GUU0R32mA2brhc2",
+          "name": "Evolution account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "ConfirmaKiwify1": {
+      "main": [
+        [
+          {
+            "node": "FiltraDadosKiwify1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FiltraDadosKiwify1": {
+      "main": [
+        [
+          {
+            "node": "GeraSenhaAleatoria2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GeraSenhaAleatoria2": {
+      "main": [
+        [
+          {
+            "node": "CriaConta2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CriaConta2": {
+      "main": [
+        [
+          {
+            "node": "AtualizaInfoUser3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AtualizaInfoUser3": {
+      "main": [
+        [
+          {
+            "node": "EnviaWhatsapp",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "EnviaEmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "ConfirmaKiwify1": [
+      {
+        "headers": {
+          "host": "webhook.controlazap.site",
+          "user-agent": "axios/1.8.4",
+          "content-length": "2646",
+          "accept": "application/json, text/plain, */*",
+          "accept-encoding": "gzip, compress, deflate, br",
+          "content-type": "application/json",
+          "traceparent": "00-b34d5a464ad72f48fe5c3dd3e69ce3cc-1efc4016f0cae50a-01",
+          "x-forwarded-for": "34.95.163.104",
+          "x-forwarded-host": "webhook.controlazap.site",
+          "x-forwarded-port": "443",
+          "x-forwarded-proto": "https",
+          "x-forwarded-server": "40cac4640380",
+          "x-real-ip": "34.95.163.104"
+        },
+        "params": {},
+        "query": {
+          "signature": "629d425c28dfb11be273f9ffaffa81475e1e0863"
+        },
+        "body": {
+          "order_id": "9e8645bf-6a55-41fb-8b85-435b9351c18c",
+          "order_ref": "p9kc2NJ",
+          "order_status": "paid",
+          "product_type": "membership",
+          "payment_method": "pix",
+          "store_id": "qGdpUekedS7eRCK",
+          "payment_merchant_id": "9e8645bf6a5541fb8b85435b9351c18c",
+          "installments": 1,
+          "card_type": null,
+          "card_last4digits": null,
+          "card_rejection_reason": null,
+          "boleto_barcode": null,
+          "boleto_expiry_date": null,
+          "pix_code": null,
+          "pix_expiration": null,
+          "sale_type": "producer",
+          "created_at": "2025-08-21 21:34",
+          "updated_at": "2025-08-21 21:34",
+          "approved_date": "2025-08-21 21:35",
+          "refunded_at": null,
+          "webhook_event_type": "order_approved",
+          "Product": {
+            "product_id": "3793edf0-7b7f-11f0-9a40-29122e606c0a",
+            "product_name": "ControlaZap"
+          },
+          "Customer": {
+            "full_name": "CARLISON DE MORAIS RIBEIRO",
+            "first_name": "CARLISON",
+            "email": "nosilrac@hotmail.com",
+            "mobile": "+5532999926735",
+            "CPF": "01876756780",
+            "cnpj": null,
+            "ip": "131.108.200.254",
+            "instagram": null
+          },
+          "Commissions": {
+            "charge_amount": 500,
+            "product_base_price": 500,
+            "product_base_price_currency": "BRL",
+            "kiwify_fee": 294,
+            "kiwify_fee_currency": "BRL",
+            "commissioned_stores": [
+              {
+                "id": "5e2e4a74-52bc-4363-a515-ddf85cd8ef4f",
+                "type": "producer",
+                "custom_name": "Carlison de Morais Ribeiro",
+                "email": "cmr.mktdigital@gmail.com",
+                "value": "206"
+              }
+            ],
+            "currency": "BRL",
+            "my_commission": 206,
+            "funds_status": "waiting",
+            "estimated_deposit_date": "2025-08-23T03:00:00.000Z",
+            "deposit_date": null
+          },
+          "TrackingParameters": {
+            "src": null,
+            "sck": null,
+            "utm_source": null,
+            "utm_medium": null,
+            "utm_campaign": null,
+            "utm_content": null,
+            "utm_term": null,
+            "s1": null,
+            "s2": null,
+            "s3": null
+          },
+          "checkout_link": "3KX2cov",
+          "Subscription": {
+            "start_date": "2025-08-22T00:34:50.020Z",
+            "next_payment": "2025-09-22T00:35:45.969Z",
+            "status": "active",
+            "customer_access": {
+              "has_access": true,
+              "active_period": true,
+              "access_until": "2025-09-22T00:35:45.969Z"
+            },
+            "plan": {
+              "id": "2b8ddfbe-ddda-49b0-bb34-c6e17b806f37",
+              "name": "1 Mês",
+              "frequency": "monthly",
+              "qty_charges": 0
+            },
+            "charges": {
+              "completed": [
+                {
+                  "order_id": "9e8645bf-6a55-41fb-8b85-435b9351c18c",
+                  "amount": 206,
+                  "status": "paid",
+                  "installments": 1,
+                  "card_type": null,
+                  "card_last_digits": null,
+                  "card_first_digits": null,
+                  "created_at": "2025-08-22T00:34:50.050Z"
+                }
+              ],
+              "future": [
+                {
+                  "charge_date": "2025-09-22T00:35:45.969Z"
+                },
+                {
+                  "charge_date": "2025-10-22T00:35:45.969Z"
+                },
+                {
+                  "charge_date": "2025-11-22T00:35:45.969Z"
+                },
+                {
+                  "charge_date": "2025-12-22T00:35:45.969Z"
+                },
+                {
+                  "charge_date": "2026-01-22T00:35:45.969Z"
+                },
+                {
+                  "charge_date": "2026-02-22T00:35:45.969Z"
+                },
+                {
+                  "charge_date": "2026-03-22T00:35:45.969Z"
+                },
+                {
+                  "charge_date": "2026-04-22T00:35:45.969Z"
+                },
+                {
+                  "charge_date": "2026-05-22T00:35:45.969Z"
+                },
+                {
+                  "charge_date": "2026-06-22T00:35:45.969Z"
+                },
+                {
+                  "charge_date": "2026-07-22T00:35:45.969Z"
+                }
+              ]
+            }
+          },
+          "subscription_id": "c49f134a-5bb3-47d2-929e-61c11e659c4d",
+          "access_url": null
+        },
+        "webhookUrl": "https://webhook.controlazap.site/webhook/confirma-kiwify",
+        "executionMode": "production"
+      }
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4cabe1a08d10bf2853a9001d10e6b6d9fb90d6c5a976d2031b9dc5b4149df03b"
+  }
+}
