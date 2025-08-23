@@ -1,0 +1,251 @@
+{
+  "meta": {
+    "instanceId": "12345"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "confirma-kiwify",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "webhook-kiwify",
+      "name": "ConfirmaKiwify1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "kiwify-webhook-001"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "customerEmail",
+              "value": "={{ $json.Customer.email }}"
+            },
+            {
+              "name": "customerName", 
+              "value": "={{ $json.Customer.full_name }}"
+            },
+            {
+              "name": "customerPhone",
+              "value": "={{ $json.Customer.mobile }}"
+            },
+            {
+              "name": "subscriptionId",
+              "value": "=KW_{{ $json.subscription_id || $json.order_id || 'default' }}"
+            },
+            {
+              "name": "customerId",
+              "value": "={{ $json.Customer.id }}"
+            },
+            {
+              "name": "contactType",
+              "value": "email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "filtro-dados-kiwify",
+      "name": "FiltraDadosKiwify1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gera uma senha aleatória de 8 dígitos\nconst senhaAleatoria = Math.floor(Math.random() * 90000000) + 10000000;\n\nreturn {\n  senhaAleatoria: senhaAleatoria.toString()\n};"
+      },
+      "id": "gera-senha",
+      "name": "GeraSenhaAleatoria2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ivsqwjcfrktpslhmxwnx.supabase.co/functions/v1/user-registration-webhook",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "={{ $('FiltraDadosKiwify1').item.json.customerEmail }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ $('FiltraDadosKiwify1').item.json.customerPhone }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $('FiltraDadosKiwify1').item.json.customerName }}"
+            },
+            {
+              "name": "contact_type",
+              "value": "={{ $('FiltraDadosKiwify1').item.json.contactType }}"
+            },
+            {
+              "name": "subscription_id",
+              "value": "={{ $('FiltraDadosKiwify1').item.json.subscriptionId }}"
+            },
+            {
+              "name": "customer_id",
+              "value": "={{ $('FiltraDadosKiwify1').item.json.customerId }}"
+            },
+            {
+              "name": "payment_provider",
+              "value": "kiwify"
+            },
+            {
+              "name": "metadata",
+              "value": "={{ { password: $('GeraSenhaAleatoria2').item.json.senhaAleatoria } }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "qBGwNzx3aECRUh1z",
+          "name": "Kiwify-Supabase"
+        }
+      },
+      "id": "registra-usuario",
+      "name": "RegistraUsuario",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('FiltraDadosKiwify1').item.json.customerEmail }}",
+        "subject": "Bem-vindo ao ControlaZap! Sua conta foi criada",
+        "emailType": "text",
+        "message": "=Olá {{ $('FiltraDadosKiwify1').item.json.customerName }}!\n\nSua conta no ControlaZap foi criada com sucesso!\n\n🔐 **Dados de acesso:**\n• Email: {{ $('FiltraDadosKiwify1').item.json.customerEmail }}\n• Senha temporária: {{ $('GeraSenhaAleatoria2').item.json.senhaAleatoria }}\n\n🚀 **Próximos passos:**\n1. Acesse: https://seu-app.vercel.app/auth\n2. Faça login com suas credenciais\n3. Altere sua senha na primeira oportunidade\n\n💰 **Sua assinatura está ativa!**\nID da assinatura: {{ $('FiltraDadosKiwify1').item.json.subscriptionId }}\n\nSe tiver dúvidas, entre em contato conosco.\n\nEquipe ControlaZap",
+        "options": {}
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "email-credential-id",
+          "name": "Gmail ControlaZap"
+        }
+      },
+      "id": "envia-email",
+      "name": "EnviaEmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolution-api.seu-dominio.com/message/sendText/sua-instancia",
+        "authentication": "genericCredentialType", 
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('FiltraDadosKiwify1').item.json.customerPhone }}"
+            },
+            {
+              "name": "text",
+              "value": "=🎉 *Bem-vindo ao ControlaZap!*\n\nOlá *{{ $('FiltraDadosKiwify1').item.json.customerName }}*!\n\nSua conta foi criada com sucesso! ✅\n\n🔐 *Dados de acesso:*\n• Email: {{ $('FiltraDadosKiwify1').item.json.customerEmail }}\n• Senha: {{ $('GeraSenhaAleatoria2').item.json.senhaAleatoria }}\n\n🚀 Acesse agora: https://seu-app.vercel.app/auth\n\n💰 Sua assinatura já está ativa!\n\nQualquer dúvida, estamos aqui para ajudar! 😊"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "evolution-api-credential",
+          "name": "Evolution API"
+        }
+      },
+      "id": "envia-whatsapp",
+      "name": "EnviaWhatsapp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1120,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "ConfirmaKiwify1": {
+      "main": [
+        [
+          {
+            "node": "FiltraDadosKiwify1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FiltraDadosKiwify1": {
+      "main": [
+        [
+          {
+            "node": "GeraSenhaAleatoria2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GeraSenhaAleatoria2": {
+      "main": [
+        [
+          {
+            "node": "RegistraUsuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RegistraUsuario": {
+      "main": [
+        [
+          {
+            "node": "EnviaEmail",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "EnviaWhatsapp", 
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "versionId": "workflow-v2"
+}
