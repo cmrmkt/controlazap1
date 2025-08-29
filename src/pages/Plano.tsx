@@ -10,7 +10,7 @@ export default function Plano() {
   const navigate = useNavigate();
   
   const handleSubscribe = () => {
-    window.open('https://www.asaas.com/c/zyevzm4ajw9p3yz2', '_blank');
+    window.open('https://pay.kiwify.com.br/v4nMp1Q', '_blank');
   };
   
   const handleBackToLogin = () => {
