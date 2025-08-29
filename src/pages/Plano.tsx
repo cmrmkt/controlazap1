@@ -126,10 +126,10 @@ export default function Plano() {
               {/* Pricing Options */}
               <div className="mb-6 space-y-2">
                 <div className="flex items-center justify-center gap-2">
-                  <span className="text-base sm:text-lg font-semibold text-primary">Plano anual - R$ 97,00</span>
+                  <span className="text-base sm:text-lg font-semibold text-primary">Plano anual - R$ 129,90</span>
                 </div>
                 <div className="flex items-center justify-center gap-2">
-                  <span className="text-base sm:text-lg font-semibold text-primary">Plano mensal - R$ 9,90</span>
+                  <span className="text-base sm:text-lg font-semibold text-primary">Plano mensal - R$ 14,90</span>
                 </div>
               </div>
               <p className="text-sm sm:text-base lg:text-lg text-muted-foreground mb-6 sm:mb-8">
@@ -170,17 +170,21 @@ export default function Plano() {
               <div className="space-y-3 sm:space-y-4">
                 <Button 
                   onClick={handleSubscribeAnnual} 
-                  className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-base sm:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="w-full h-16 sm:h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-sm sm:text-base lg:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col sm:flex-row items-center justify-center leading-tight"
                 >
-                  🚀 Garantir o Plano Anual - R$ 129,90
+                  <span className="sm:hidden">🚀 Garantir o Plano Anual</span>
+                  <span className="sm:hidden">R$ 129,90</span>
+                  <span className="hidden sm:inline">🚀 Garantir o Plano Anual - R$ 129,90</span>
                 </Button>
                 
                 <Button 
                   onClick={handleSubscribeMonthly}
                   variant="outline"
-                  className="w-full h-12 border-primary text-primary hover:bg-primary hover:text-primary-foreground text-base sm:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="w-full h-16 sm:h-12 border-primary text-primary hover:bg-primary hover:text-primary-foreground text-sm sm:text-base lg:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col sm:flex-row items-center justify-center leading-tight"
                 >
-                  🚀 Quero o Plano Mensal - R$ 14,90
+                  <span className="sm:hidden">🚀 Quero o Plano Mensal</span>
+                  <span className="sm:hidden">R$ 14,90</span>
+                  <span className="hidden sm:inline">🚀 Quero o Plano Mensal - R$ 14,90</span>
                 </Button>
                 
                 <Button 
