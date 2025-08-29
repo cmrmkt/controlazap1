@@ -118,17 +118,17 @@ export default function Plano() {
           </div>
           
           <div className="w-full mx-auto">
-            <div className="text-start py-4 sm:py-6 lg:py-8">
+            <div className="text-center py-4 sm:py-6 lg:py-8">
               <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 mb-4 dark:text-slate-300">
                 Plano Assistente Financeiro
               </h1>
               
               {/* Pricing Options */}
               <div className="mb-6 space-y-2">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center gap-2">
                   <span className="text-base sm:text-lg font-semibold text-primary">Plano anual - R$ 97,00</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center gap-2">
                   <span className="text-base sm:text-lg font-semibold text-primary">Plano mensal - R$ 9,90</span>
                 </div>
               </div>
@@ -172,7 +172,7 @@ export default function Plano() {
                   onClick={handleSubscribeAnnual} 
                   className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-base sm:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  🚀 Garantir meu plano agora - R$ 97,00
+                  🚀 Garantir o Plano Anual - R$ 129,90
                 </Button>
                 
                 <Button 
@@ -180,7 +180,7 @@ export default function Plano() {
                   variant="outline"
                   className="w-full h-12 border-primary text-primary hover:bg-primary hover:text-primary-foreground text-base sm:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  💳 Garantir meu plano mensal - R$ 9,90
+                  🚀 Quero o Plano Mensal - R$ 14,90
                 </Button>
                 
                 <Button 
