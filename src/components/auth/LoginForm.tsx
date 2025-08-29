@@ -84,7 +84,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
   }
 
   const handleSubscribeClick = () => {
-    window.open('https://www.asaas.com/c/zyevzm4ajw9p3yz2', '_blank')
+    window.open('https://pay.kiwify.com.br/v4nMp1Q', '_blank')
   }
 
   const handleResendConfirmation = async () => {
