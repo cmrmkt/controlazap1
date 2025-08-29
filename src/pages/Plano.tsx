@@ -4,12 +4,17 @@ import { Button } from '@/components/ui/button';
 import { OptimizedImage } from '@/components/ui/optimized-image';
 import { useTheme } from '@/hooks/useTheme';
 import { Check } from 'lucide-react';
+import controlAzapLogo from '@/assets/controlazap-logo.png';
 
 export default function Plano() {
   const { theme } = useTheme();
   const navigate = useNavigate();
   
-  const handleSubscribe = () => {
+  const handleSubscribeAnnual = () => {
+    window.open('https://pay.kiwify.com.br/v4nMp1Q', '_blank');
+  };
+  
+  const handleSubscribeMonthly = () => {
     window.open('https://pay.kiwify.com.br/v4nMp1Q', '_blank');
   };
   
@@ -103,11 +108,30 @@ export default function Plano() {
 
         <div className="w-full max-w-md lg:max-w-lg mt-4 sm:mt-8 lg:mt-16 space-y-4">
           
+          {/* Logo ControlAzap */}
+          <div className="flex justify-center mb-6">
+            <img 
+              src={controlAzapLogo}
+              alt="ControlAzap Logo"
+              className="h-16 w-auto object-contain"
+            />
+          </div>
+          
           <div className="w-full mx-auto">
             <div className="text-start py-4 sm:py-6 lg:py-8">
-              <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 mb-2 dark:text-slate-300">
-                Plano Assistente Financeiro - <span className="text-primary">R$ 97,00/ano</span>
+              <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 mb-4 dark:text-slate-300">
+                Plano Assistente Financeiro
               </h1>
+              
+              {/* Pricing Options */}
+              <div className="mb-6 space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-base sm:text-lg font-semibold text-primary">Plano anual - R$ 97,00</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-base sm:text-lg font-semibold text-primary">Plano mensal - R$ 9,90</span>
+                </div>
+              </div>
               <p className="text-sm sm:text-base lg:text-lg text-muted-foreground mb-6 sm:mb-8">
                 🚀 <strong>Controle total das suas finanças</strong> com a inteligência artificial mais avançada do mercado!
               </p>
@@ -142,26 +166,21 @@ export default function Plano() {
                 </div>
               </div>
 
-              {/* Impact Message */}
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg p-4 mb-6 sm:mb-8 border border-green-200 dark:border-green-700">
-                <p className="text-base sm:text-lg font-bold text-green-700 dark:text-green-300 text-center">
-                  💰 Apenas R$ 8,08 por mês!
-                </p>
-                <p className="text-sm text-green-600 dark:text-green-400 text-center mt-1">
-                  <span className="line-through opacity-60">R$ 194,00/ano</span> - Economize <strong>R$ 97,00</strong> pagando anualmente! 🔥
-                </p>
-                <p className="text-xs text-muted-foreground text-center mt-2">
-                  ⚡ Menos que um cafezinho por dia - mais que um futuro próspero! ✨
-                </p>
-              </div>
-
               {/* Action Buttons */}
               <div className="space-y-3 sm:space-y-4">
                 <Button 
-                  onClick={handleSubscribe} 
+                  onClick={handleSubscribeAnnual} 
                   className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-base sm:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   🚀 Garantir meu plano agora - R$ 97,00
+                </Button>
+                
+                <Button 
+                  onClick={handleSubscribeMonthly}
+                  variant="outline"
+                  className="w-full h-12 border-primary text-primary hover:bg-primary hover:text-primary-foreground text-base sm:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  💳 Garantir meu plano mensal - R$ 9,90
                 </Button>
                 
                 <Button 
