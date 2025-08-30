@@ -84,7 +84,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
   }
 
   const handleSubscribeClick = () => {
-    window.open('https://pay.kiwify.com.br/v4nMp1Q', '_blank')
+    window.open('https://controlazap1.lovable.app/plano', '_blank')
   }
 
   const handleResendConfirmation = async () => {
