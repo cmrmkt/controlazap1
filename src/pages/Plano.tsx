@@ -11,11 +11,11 @@ export default function Plano() {
   const navigate = useNavigate();
   
   const handleSubscribeAnnual = () => {
-    window.open('https://pay.kiwify.com.br/faBjXCQ', '_blank');
+    window.open('https://controlazap1.lovable.app/auth', '_blank');
   };
   
   const handleSubscribeMonthly = () => {
-    window.open('https://pay.kiwify.com.br/m4Dm7Lr', '_blank');
+    window.open('https://controlazap1.lovable.app/auth', '_blank');
   };
   
   const handleBackToLogin = () => {
