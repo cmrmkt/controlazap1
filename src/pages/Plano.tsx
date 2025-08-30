@@ -41,14 +41,13 @@ export default function Plano() {
     <div className="min-h-screen flex bg-background p-4 sm:p-6">
       {/* Left side - Image */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden rounded-3xl">
-        <div className="flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/40 w-full h-full">
+        <div className="flex items-center justify-center bg-white w-full h-full">
           <img 
             src="/lovable-uploads/dc878c9b-d5d9-4aff-91d7-8a7ba511fedd.png" 
             alt="ControlaZap Logo"
             className="max-w-[200px] w-auto h-auto object-contain"
           />
         </div>
-        <div className="absolute inset-0 bg-primary/20" />
         <div className="absolute bottom-8 left-8 text-white">
           <div className="flex items-center gap-3 mb-4">
             <h2 className="text-2xl sm:text-3xl font-bold text-white">Agora ficou fácil!</h2>
