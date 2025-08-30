@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { OptimizedImage } from '@/components/ui/optimized-image';
 import { useTheme } from '@/hooks/useTheme';
 import { Check } from 'lucide-react';
-import controlAzapLogo from '@/assets/controlazap-logo.png';
+
 
 export default function Plano() {
   const { theme } = useTheme();
@@ -108,14 +108,6 @@ export default function Plano() {
 
         <div className="w-full max-w-md lg:max-w-lg mt-4 sm:mt-8 lg:mt-16 space-y-4">
           
-          {/* Logo ControlAzap */}
-          <div className="flex justify-center mb-6">
-            <img 
-              src={controlAzapLogo}
-              alt="ControlAzap Logo"
-              className="h-16 w-auto object-contain"
-            />
-          </div>
           
           <div className="w-full mx-auto">
             <div className="text-center py-4 sm:py-6 lg:py-8">
