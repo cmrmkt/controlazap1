@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { LoginForm } from '@/components/auth/LoginForm';
 import { ForgotPasswordForm } from '@/components/auth/ForgotPasswordForm';
 import { NewPasswordForm } from '@/components/auth/NewPasswordForm';
+import logoImage from '@/assets/controlazap-logo.png';
 
 type AuthMode = 'login' | 'forgot' | 'reset';
 
@@ -45,7 +46,16 @@ export default function Auth() {
       
       {/* Content */}
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-        <div className="w-full max-w-md glass-card rounded-2xl p-8 border border-white/10 backdrop-blur-xl bg-card/80">        
+        <div className="w-full max-w-md glass-card rounded-2xl p-8 border border-white/10 backdrop-blur-xl bg-card/80">
+          {/* Logo */}
+          <div className="flex justify-center mb-8">
+            <img 
+              src={logoImage} 
+              alt="ControlaZap" 
+              className="h-16 w-auto"
+            />
+          </div>
+          
           {mode === 'login' && (
             <LoginForm 
               onForgotPassword={() => setMode('forgot')}
