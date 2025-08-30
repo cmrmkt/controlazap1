@@ -11,11 +11,11 @@ export default function Plano() {
   const navigate = useNavigate();
   
   const handleSubscribeAnnual = () => {
-    window.open('https://controlazap1.lovable.app/auth', '_blank');
+    window.open('https://pay.kiwify.com.br/KOD32qJ', '_blank');
   };
   
   const handleSubscribeMonthly = () => {
-    window.open('https://controlazap1.lovable.app/auth', '_blank');
+    window.open('https://pay.kiwify.com.br/m4Dm7Lr', '_blank');
   };
   
   const handleBackToLogin = () => {
@@ -120,7 +120,7 @@ export default function Plano() {
               {/* Pricing Options */}
               <div className="mb-6 space-y-2">
                 <div className="flex items-center justify-center gap-2">
-                  <span className="text-base sm:text-lg font-semibold text-primary">Plano anual - R$ 129,90</span>
+                  <span className="text-base sm:text-lg font-semibold text-primary">Plano anual - R$ 99,90</span>
                 </div>
                 <div className="flex items-center justify-center gap-2">
                   <span className="text-base sm:text-lg font-semibold text-primary">Plano mensal - R$ 14,90</span>
@@ -166,9 +166,9 @@ export default function Plano() {
                   onClick={handleSubscribeAnnual} 
                   className="w-full h-16 sm:h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-sm sm:text-base lg:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col sm:flex-row items-center justify-center leading-tight"
                 >
-                  <span className="sm:hidden">🚀 Garantir o Plano Anual</span>
-                  <span className="sm:hidden">R$ 109,90</span>
-                  <span className="hidden sm:inline">🚀 Garantir o Plano Anual - R$ 109,90</span>
+                  <span className="sm:hidden">🚀 Quero o Plano Anual</span>
+                  <span className="sm:hidden">R$ 99,90</span>
+                  <span className="hidden sm:inline">🚀 Quero o Plano Anual - R$ 99,90</span>
                 </Button>
                 
                 <Button 
