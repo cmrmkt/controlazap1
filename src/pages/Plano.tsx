@@ -42,7 +42,7 @@ export default function Plano() {
       {/* Left side - Image */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden rounded-3xl">
         <div className="flex items-start justify-center bg-gradient-to-br from-primary/20 to-primary/40 w-full h-full pt-16">
-          <div className="bg-white/40 backdrop-blur-sm rounded-xl p-8 shadow-2xl">
+          <div className="bg-white rounded-xl p-8 shadow-2xl">
             <img 
               src="/lovable-uploads/dc878c9b-d5d9-4aff-91d7-8a7ba511fedd.png" 
               alt="ControlaZap Logo"
