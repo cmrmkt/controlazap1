@@ -11,11 +11,11 @@ export default function Plano() {
   const navigate = useNavigate();
   
   const handleSubscribeAnnual = () => {
-    window.open('https://pay.kiwify.com.br/v4nMp1Q', '_blank');
+    window.open('https://pay.kiwify.com.br/faBjXCQ', '_blank');
   };
   
   const handleSubscribeMonthly = () => {
-    window.open('https://pay.kiwify.com.br/v4nMp1Q', '_blank');
+    window.open('https://pay.kiwify.com.br/m4Dm7Lr', '_blank');
   };
   
   const handleBackToLogin = () => {
@@ -173,8 +173,8 @@ export default function Plano() {
                   className="w-full h-16 sm:h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-sm sm:text-base lg:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col sm:flex-row items-center justify-center leading-tight"
                 >
                   <span className="sm:hidden">🚀 Garantir o Plano Anual</span>
-                  <span className="sm:hidden">R$ 129,90</span>
-                  <span className="hidden sm:inline">🚀 Garantir o Plano Anual - R$ 129,90</span>
+                  <span className="sm:hidden">R$ 109,90</span>
+                  <span className="hidden sm:inline">🚀 Garantir o Plano Anual - R$ 109,90</span>
                 </Button>
                 
                 <Button 
