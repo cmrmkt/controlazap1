@@ -84,7 +84,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
   }
 
   const handleSubscribeClick = () => {
-    window.open('https://controlazap1.lovable.app/plano', '_blank')
+    window.open('https://www.controlazap.site/plano', '_blank')
   }
 
   const handleResendConfirmation = async () => {
