@@ -20,7 +20,7 @@ export function DashboardFilters({
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
-        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">Sistema de Gestão Financeira</h2>
+        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">Seu Assistente Financeiro</h2>
         <p className="text-sm sm:text-base text-muted-foreground">
           Visão geral das suas finanças pessoais
           {transactionCount > 0 && ` • ${transactionCount} transações encontradas`}
