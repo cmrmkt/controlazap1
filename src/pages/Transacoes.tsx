@@ -16,6 +16,7 @@ import { CategorySelector } from '@/components/transactions/CategorySelector'
 import { PageWrapper } from '@/components/layout/PageWrapper'
 import { supabase } from '@/integrations/supabase/client'
 import { useAuth } from '@/hooks/useAuth'
+import { useGlobalRealtime } from '@/hooks/useGlobalRealtime'
 import { useCategories } from '@/hooks/useCategories'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { toast } from '@/hooks/use-toast'
@@ -42,6 +43,7 @@ export default function Transacoes() {
   const { user } = useAuth()
   const { categories } = useCategories()
   const isMobile = useIsMobile()
+  useGlobalRealtime() // Ativar sistema de realtime otimizado
   const [transacoes, setTransacoes] = useState<Transacao[]>([])
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -64,6 +66,36 @@ export default function Transacoes() {
   useEffect(() => {
     if (user) {
       fetchTransacoes()
+      
+      // Implementar listener para atualizações de transações via realtime
+      let lastUpdateTime = 0;
+      const handleTransactionsUpdate = (event: CustomEvent) => {
+        const { eventType, new: newData, old: oldData } = event.detail;
+        console.log('[TRANSACOES] Realtime update received:', { eventType, newData, oldData });
+        
+        // Debounce para evitar atualizações duplicadas - aumentado para 1500ms
+        const now = Date.now();
+        if (lastUpdateTime && now - lastUpdateTime < 1500) {
+          return;
+        }
+        lastUpdateTime = now;
+        
+        if (eventType === 'UPDATE' && newData) {
+          setTransacoes(prev => 
+            prev.map(t => t.id === newData.id ? { ...t, ...newData as Transacao } : t)
+          );
+        } else if (eventType === 'DELETE' && oldData) {
+          setTransacoes(prev => prev.filter(t => t.id !== oldData.id));
+        } else if (eventType === 'INSERT' && newData) {
+          setTransacoes(prev => [newData as Transacao, ...prev]);
+        }
+      };
+
+      window.addEventListener('transactions-updated', handleTransactionsUpdate);
+      
+      return () => {
+        window.removeEventListener('transactions-updated', handleTransactionsUpdate);
+      };
     }
   }, [user])
 
@@ -218,7 +250,7 @@ export default function Transacoes() {
         tipo: '',
         category_id: '',
       })
-      fetchTransacoes()
+      // fetchTransacoes() removido - o realtime vai atualizar automaticamente
     } catch (error: any) {
       toast({
         title: "Erro ao salvar transação",
@@ -252,7 +284,7 @@ export default function Transacoes() {
 
       if (error) throw error
       toast({ title: "Transação excluída com sucesso!" })
-      fetchTransacoes()
+      // fetchTransacoes() removido - o realtime vai atualizar automaticamente
     } catch (error: any) {
       toast({
         title: "Erro ao excluir transação",
@@ -271,7 +303,7 @@ export default function Transacoes() {
 
       if (error) throw error
       toast({ title: "Todas as transações foram excluídas com sucesso!" })
-      fetchTransacoes()
+      // fetchTransacoes() removido - o realtime vai atualizar automaticamente
     } catch (error: any) {
       toast({
         title: "Erro ao excluir transações",

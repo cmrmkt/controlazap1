@@ -63,9 +63,9 @@ export default function Lembretes() {
         const { eventType, new: newData, old: oldData } = event.detail;
         console.log('[LEMBRETES] Realtime update received:', { eventType, newData, oldData });
         
-        // Debounce para evitar atualizações duplicadas
+        // Debounce para evitar atualizações duplicadas - aumentado para 1500ms
         const now = Date.now();
-        if (lastUpdateTime && now - lastUpdateTime < 500) {
+        if (lastUpdateTime && now - lastUpdateTime < 1500) {
           return;
         }
         lastUpdateTime = now;
@@ -161,7 +161,7 @@ export default function Lembretes() {
         repeat_months: 1,
         icon: 'calendar',
       })
-      fetchLembretes()
+      // fetchLembretes() removido - o realtime vai atualizar automaticamente
     } catch (error: any) {
       console.error('Erro ao salvar lembrete:', error)
       toast({
@@ -196,7 +196,7 @@ export default function Lembretes() {
 
       if (error) throw error
       toast({ title: "Lembrete excluído com sucesso!" })
-      fetchLembretes()
+      // fetchLembretes() removido - o realtime vai atualizar automaticamente
     } catch (error: any) {
       toast({
         title: "Erro ao excluir lembrete",
@@ -215,7 +215,7 @@ export default function Lembretes() {
 
       if (error) throw error
       toast({ title: "Todos os lembretes foram excluídos com sucesso!" })
-      fetchLembretes()
+      // fetchLembretes() removido - o realtime vai atualizar automaticamente
     } catch (error: any) {
       toast({
         title: "Erro ao excluir lembretes",
@@ -266,7 +266,57 @@ export default function Lembretes() {
   const markAsPaid = async (lembrete: Lembrete) => {
     try {
       const newStatus = lembrete.status === 'paid' ? 'pending' : 'paid'
+      let transacaoData = null
       
+      // Se estiver marcando como pago, criar transação
+      if (newStatus === 'paid' && lembrete.valor && lembrete.valor > 0) {
+        // Primeiro, verificar se existe categoria "Lembretes" ou criar uma
+        let lembretesCategoryId = null
+        
+        const { data: existingCategory } = await supabase
+          .from('categorias')
+          .select('id')
+          .eq('userid', user?.id)
+          .eq('nome', 'Lembretes')
+          .single()
+        
+        if (existingCategory) {
+          lembretesCategoryId = existingCategory.id
+        } else {
+          // Criar categoria "Lembretes"
+          const { data: newCategory, error: categoryError } = await supabase
+            .from('categorias')
+            .insert([{
+              nome: 'Lembretes',
+              userid: user?.id,
+              tags: 'pagamento,lembrete'
+            }])
+            .select('id')
+            .single()
+          
+          if (categoryError) throw categoryError
+          lembretesCategoryId = newCategory.id
+        }
+        
+        // Criar transação correspondente
+        transacaoData = {
+          quando: new Date().toISOString(),
+          estabelecimento: lembrete.descricao || 'Pagamento via Lembrete',
+          valor: lembrete.valor,
+          detalhes: `Pagamento marcado via lembrete - ${lembrete.descricao}`,
+          tipo: 'despesa',
+          category_id: lembretesCategoryId,
+          userid: user?.id,
+        }
+        
+        const { error: transactionError } = await supabase
+          .from('transacoes')
+          .insert([transacaoData])
+        
+        if (transactionError) throw transactionError
+      }
+      
+      // Atualizar status do lembrete
       const { error } = await supabase
         .from('lembretes')
         .update({ status: newStatus })
@@ -277,15 +327,29 @@ export default function Lembretes() {
       toast({
         title: newStatus === 'paid' ? "Lembrete marcado como pago" : "Lembrete marcado como pendente",
         description: newStatus === 'paid' 
-          ? "O lembrete foi marcado como pago com sucesso"
-          : "O lembrete foi marcado como pendente novamente",
+          ? lembrete.valor && lembrete.valor > 0 
+            ? "Lembrete marcado como pago e transação criada com sucesso!"
+            : "Lembrete marcado como pago com sucesso"
+          : "Lembrete marcado como pendente novamente",
       })
 
-      // Atualizar estado local imediatamente
+      // Atualizar estado local imediatamente - sem recarregar tudo
       setLembretes(prev => 
         prev.map(l => l.id === lembrete.id ? { ...l, status: newStatus } : l)
       )
+      
+      // Disparar evento para atualizar outras telas se necessário
+      if (newStatus === 'paid' && transacaoData) {
+        window.dispatchEvent(new CustomEvent('transactions-updated', { 
+          detail: { 
+            eventType: 'INSERT', 
+            new: { ...transacaoData, id: Date.now() } 
+          } 
+        }))
+      }
+      
     } catch (error: any) {
+      console.error('Erro ao marcar como pago:', error)
       toast({
         title: "Erro ao atualizar status",
         description: error.message,
@@ -340,8 +404,7 @@ export default function Lembretes() {
           : "Este lembrete não será mais repetido automaticamente",
       });
 
-      // Recarregar dados do servidor para garantir sincronização
-      await fetchLembretes();
+      // fetchLembretes() removido - o realtime vai atualizar automaticamente
     } catch (error: any) {
       console.error('Error toggling fixed reminder:', error);
       toast({
@@ -398,7 +461,7 @@ export default function Lembretes() {
         description: `${months.length} lembretes foram criados para os meses selecionados`,
       });
 
-      fetchLembretes();
+      // fetchLembretes() removido - o realtime vai atualizar automaticamente
     } catch (error: any) {
       toast({
         title: "Erro ao criar lembretes",

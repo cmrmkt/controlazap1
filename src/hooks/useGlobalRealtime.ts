@@ -18,8 +18,8 @@ export function useGlobalRealtime() {
       supabase.removeChannel(channelRef.current);
     }
 
-    // Debounce function to prevent duplicate events
-    const debounceEvent = (eventType: string, callback: () => void, delay = 500) => {
+    // Debounce function to prevent duplicate events - aumentado para 1500ms
+    const debounceEvent = (eventType: string, callback: () => void, delay = 1500) => {
       const now = Date.now();
       const key = `${eventType}-${user.id}`;
       
