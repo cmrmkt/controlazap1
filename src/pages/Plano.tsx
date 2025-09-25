@@ -187,62 +187,6 @@ export default function Plano() {
           </div>
         </div>
       </div>
-
-      {/* Right side - Protected Video */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden rounded-3xl">
-        <ProtectedVideo
-          src="/videos/controlazap-video.mp4"
-          className="w-full h-full"
-          autoplay={true}
-          muted={true}
-        />
-        
-        {/* Video Overlay with Info */}
-        <div className="absolute bottom-8 left-8 text-white z-10">
-          <div className="bg-black/20 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-            <h3 className="text-xl font-bold mb-2">Veja como é fácil usar!</h3>
-            <p className="text-sm opacity-90">
-              Assista ao vídeo e descubra como o ControlaZap pode revolucionar suas finanças
-            </p>
-            
-            {/* User testimonial overlay */}
-            <div className="mt-4 flex items-center gap-2">
-              <div className="flex -space-x-2">
-                {userProfiles.slice(0, 3).map((profile, index) => (
-                  <div
-                    key={index}
-                    className="w-6 h-6 rounded-full border border-white overflow-hidden bg-white/20"
-                  >
-                    <img 
-                      src={profile} 
-                      alt={`Usuário ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-              <span className="text-xs font-medium">+500 usuários satisfeitos</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Video Section - appears below content on mobile */}
-      <div className="lg:hidden w-full mt-6">
-        <div className="relative rounded-xl overflow-hidden">
-          <ProtectedVideo
-            src="/videos/controlazap-video.mp4"
-            className="w-full h-64"
-            autoplay={true}
-            muted={true}
-          />
-          <div className="absolute bottom-4 left-4 right-4">
-            <div className="bg-black/40 backdrop-blur-sm rounded-lg p-3 text-white text-center">
-              <p className="text-sm font-medium">Veja como é fácil usar o ControlaZap!</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
