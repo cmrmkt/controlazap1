@@ -41,14 +41,16 @@ export default function Plano() {
     <div className="min-h-screen bg-background">
       {/* Mobile Video Section - Top of page on mobile */}
       <div className="lg:hidden w-full p-4 pb-0">
-        <div className="relative rounded-xl overflow-hidden mx-auto max-w-sm">
-          <ProtectedVideo
-            src="/videos/controlazap-video.mp4"
-            className="w-full h-48 object-cover"
-            autoplay={true}
-            muted={true}
-          />
-          <div className="absolute bottom-3 left-3 right-3">
+        <div className="relative mx-auto max-w-sm">
+          <div className="aspect-video rounded-xl overflow-hidden">
+            <ProtectedVideo
+              src="/videos/controlazap-video.mp4"
+              className="w-full h-full"
+              autoplay={false}
+              muted={true}
+            />
+          </div>
+          <div className="absolute bottom-3 left-3 right-3 pointer-events-none">
             <div className="bg-black/40 backdrop-blur-sm rounded-lg p-2 text-white text-center">
               <p className="text-xs font-medium">Veja como é fácil usar o ControlaZap!</p>
             </div>
@@ -152,39 +154,40 @@ export default function Plano() {
         </div>
 
         {/* Right side - Protected Video (Desktop only) */}
-        <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden rounded-3xl">
-          <ProtectedVideo
-            src="/videos/controlazap-video.mp4"
-            className="w-full h-full"
-            autoplay={true}
-            muted={true}
-          />
-          
-          {/* Video Overlay with Info */}
-          <div className="absolute bottom-8 left-8 text-white z-10">
-            <div className="bg-black/20 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-              <h3 className="text-xl font-bold mb-2">Veja como é fácil usar!</h3>
-              <p className="text-sm opacity-90">
-                Assista ao vídeo e descubra como o ControlaZap pode revolucionar suas finanças
-              </p>
-              
-              {/* User testimonial overlay */}
-              <div className="mt-4 flex items-center gap-2">
-                <div className="flex -space-x-2">
-                  {userProfiles.slice(0, 3).map((profile, index) => (
-                    <div
-                      key={index}
-                      className="w-6 h-6 rounded-full border border-white overflow-hidden bg-white/20"
-                    >
-                      <img 
-                        src={profile} 
-                        alt={`Usuário ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ))}
+        <div className="hidden lg:flex lg:w-1/2 items-center justify-center p-4">
+          <div className="relative max-w-lg w-full aspect-video rounded-3xl overflow-hidden">
+            <ProtectedVideo
+              src="/videos/controlazap-video.mp4"
+              className="w-full h-full"
+              autoplay={false}
+              muted={true}
+            />
+            {/* Video Overlay with Info */}
+            <div className="absolute bottom-6 left-6 text-white z-10 pointer-events-none">
+              <div className="bg-black/20 backdrop-blur-sm rounded-lg p-4 border border-white/20 max-w-xs">
+                <h3 className="text-lg font-bold mb-2">Veja como é fácil usar!</h3>
+                <p className="text-sm opacity-90 mb-3">
+                  Assista ao vídeo e descubra como o ControlaZap pode revolucionar suas finanças
+                </p>
+                
+                {/* User testimonial overlay */}
+                <div className="flex items-center gap-2">
+                  <div className="flex -space-x-2">
+                    {userProfiles.slice(0, 3).map((profile, index) => (
+                      <div
+                        key={index}
+                        className="w-6 h-6 rounded-full border border-white overflow-hidden bg-white/20"
+                      >
+                        <img 
+                          src={profile} 
+                          alt={`Usuário ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <span className="text-xs font-medium">+500 usuários satisfeitos</span>
                 </div>
-                <span className="text-xs font-medium">+500 usuários satisfeitos</span>
               </div>
             </div>
           </div>

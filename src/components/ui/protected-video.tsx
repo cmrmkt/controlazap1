@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { Play, Pause } from 'lucide-react';
 
 interface ProtectedVideoProps {
   src: string;
@@ -13,12 +14,14 @@ export function ProtectedVideo({
   src,
   poster,
   className,
-  autoplay = true,
+  autoplay = false,
   muted = true
 }: ProtectedVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showControls, setShowControls] = useState(true);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -72,6 +75,36 @@ export function ProtectedVideo({
     setError(true);
   };
 
+  const togglePlay = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isPlaying) {
+      video.pause();
+      setIsPlaying(false);
+      setShowControls(true);
+    } else {
+      video.muted = false; // Unmute when user actively plays
+      video.play();
+      setIsPlaying(true);
+      setShowControls(false);
+    }
+  };
+
+  const handleVideoClick = () => {
+    togglePlay();
+  };
+
+  const handlePlay = () => {
+    setIsPlaying(true);
+    setShowControls(false);
+  };
+
+  const handlePause = () => {
+    setIsPlaying(false);
+    setShowControls(true);
+  };
+
   return (
     <div className={cn("relative overflow-hidden rounded-xl", className)}>
       {/* Loading State */}
@@ -92,7 +125,7 @@ export function ProtectedVideo({
       <video
         ref={videoRef}
         className={cn(
-          "w-full h-full object-cover",
+          "w-full h-full object-cover cursor-pointer",
           "select-none pointer-events-auto",
           "focus:outline-none"
         )}
@@ -102,10 +135,13 @@ export function ProtectedVideo({
         loop
         playsInline
         preload="metadata"
-        controlsList="nodownload nofullscreen noremoteplayback"
+        controlsList="nodownload nofullscreen noremoteplaybook"
         disablePictureInPicture
         onLoadedData={handleLoadedData}
         onError={handleError}
+        onPlay={handlePlay}
+        onPause={handlePause}
+        onClick={handleVideoClick}
         onContextMenu={(e) => e.preventDefault()}
         onDragStart={(e) => e.preventDefault()}
         draggable={false}
@@ -120,6 +156,22 @@ export function ProtectedVideo({
         <source src={src} type="video/mp4" />
         Seu navegador não suporta vídeo HTML5.
       </video>
+
+      {/* Play/Pause Button Overlay */}
+      {showControls && !isLoading && !error && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-opacity duration-300">
+          <button
+            onClick={togglePlay}
+            className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-4 transition-all duration-300 hover:scale-110"
+          >
+            {isPlaying ? (
+              <Pause className="h-8 w-8 text-white" />
+            ) : (
+              <Play className="h-8 w-8 text-white ml-1" />
+            )}
+          </button>
+        </div>
+      )}
 
       {/* Invisible Session Watermark */}
       <div className="absolute top-2 right-2 opacity-0 pointer-events-none text-xs">
