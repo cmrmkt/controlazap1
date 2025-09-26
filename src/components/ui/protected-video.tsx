@@ -106,7 +106,7 @@ export function ProtectedVideo({
   };
 
   return (
-    <div className={cn("relative overflow-hidden rounded-xl", className)}>
+    <div className={cn("relative overflow-hidden rounded-xl bg-black", className)}>
       {/* Loading State */}
       {isLoading && (
         <div className="absolute inset-0 bg-muted flex items-center justify-center z-10">
@@ -125,7 +125,7 @@ export function ProtectedVideo({
       <video
         ref={videoRef}
         className={cn(
-          "w-full h-full object-cover cursor-pointer",
+          "w-full h-full object-contain cursor-pointer",
           "select-none pointer-events-auto",
           "focus:outline-none"
         )}
@@ -135,7 +135,7 @@ export function ProtectedVideo({
         loop
         playsInline
         preload="metadata"
-        controlsList="nodownload nofullscreen noremoteplaybook"
+        controlsList="nodownload nofullscreen noremoteplayback"
         disablePictureInPicture
         onLoadedData={handleLoadedData}
         onError={handleError}
@@ -159,7 +159,7 @@ export function ProtectedVideo({
 
       {/* Play/Pause Button Overlay */}
       {showControls && !isLoading && !error && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-opacity duration-300">
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/30 transition-opacity duration-300">
           <button
             onClick={togglePlay}
             className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-4 transition-all duration-300 hover:scale-110"
