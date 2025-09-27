@@ -38,7 +38,7 @@ export default function Plano() {
   ];
 
   return (
-    <div className="min-h-screen bg-background flex justify-center">
+    <div className="min-h-screen bg-background">
       {/* Video Section - Top of page for all devices */}
       <div className="w-full p-4 pb-0">
         <div className="relative mx-auto max-w-sm sm:max-w-md lg:max-w-lg">
