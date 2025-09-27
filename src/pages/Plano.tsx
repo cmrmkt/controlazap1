@@ -42,7 +42,7 @@ export default function Plano() {
       {/* Mobile Video Section - Top of page on mobile */}
       <div className="lg:hidden w-full p-4 pb-0">
         <div className="relative mx-auto max-w-sm">
-          <div className="aspect-video rounded-xl overflow-hidden">
+          <div className="h-[70vh] min-h-[300px] max-h-[500px] rounded-xl overflow-hidden">
             <ProtectedVideo
               src="/videos/controlazap-video.mp4"
               className="w-full h-full"
@@ -61,7 +61,7 @@ export default function Plano() {
       {/* Desktop Layout - Two columns */}
       <div className="flex p-4 sm:p-6">
         {/* Left side - Plan Info */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
+        <div className="w-full lg:w-3/5 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
           {/* Header */}
           <div className="absolute top-4 left-4 right-4 flex justify-end items-center">
             {/* Theme locked to dark mode */}
@@ -154,8 +154,8 @@ export default function Plano() {
         </div>
 
         {/* Right side - Protected Video (Desktop only) */}
-        <div className="hidden lg:flex lg:w-1/2 items-center justify-center p-4">
-          <div className="relative max-w-lg w-full aspect-video rounded-3xl overflow-hidden">
+        <div className="hidden lg:flex lg:w-2/5 items-center justify-center p-4">
+          <div className="relative max-w-md w-full aspect-video rounded-3xl overflow-hidden">
             <ProtectedVideo
               src="/videos/controlazap-video.mp4"
               className="w-full h-full"
